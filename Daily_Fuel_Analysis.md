@@ -1,4 +1,4 @@
-Daily German Fuel Price Analysis (2024)
+Daily German Fuel Price Analysis for 2024
 ================
 
 ## Dataset
