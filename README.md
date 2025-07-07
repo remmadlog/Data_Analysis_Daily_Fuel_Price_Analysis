@@ -10,7 +10,7 @@ We will mainly use **R** to answer the following questions:
 
 > For questions related to an even more general overview, like month behaviour, we refer to [this](https://github.com/remmadlog/Data_Analysis_Fuel_Prices/tree/master) project.
 
-> For an overview of the code see the ``.rmd`` [Daily_Fuel_Analysis.rmd](Daily_Fuel_Analysis.rmd) or the ``.R`` files 
+> For an overview of the code see the ``.rmd`` [Daily_Fuel_Analysis.md](Daily_Fuel_Analysis.md) or the ``.R`` files 
 > [time_analysis.R](time_analysis.R)
 > [transforming_cleaning.R](transforming_cleaning.R)
 

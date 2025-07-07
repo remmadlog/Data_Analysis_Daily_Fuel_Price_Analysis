@@ -172,22 +172,14 @@ df %>%
 print(head(df,7))
 ```
 
-    ##        date_app       brand   diesel       e5      e10 gr_size weekday hour
-    ## 1 2024-01-01 00             1.683295 1.775682 1.717955      44  Montag    0
-    ## 2 2024-01-01 00   A Energie 1.656500 1.774000 1.714000       4  Montag    0
-    ## 3 2024-01-01 00     ALLGUTH 1.673444 1.737889 1.684556       9  Montag    0
-    ## 4 2024-01-01 00         AMB 1.709000 1.819000 1.759000       1  Montag    0
-    ## 5 2024-01-01 00        ARAL 1.794852 1.872968 1.812968    1051  Montag    0
-    ## 6 2024-01-01 00        AVIA 1.685993 1.775667 1.715993     153  Montag    0
-    ## 7 2024-01-01 00 AVIA Xpress 1.715818 1.800364 1.740364      11  Montag    0
-    ##     tod
-    ## 1 night
-    ## 2 night
-    ## 3 night
-    ## 4 night
-    ## 5 night
-    ## 6 night
-    ## 7 night
+    ##        date_app       brand   diesel       e5      e10 gr_size weekday hour   tod
+    ## 1 2024-01-01 00             1.683295 1.775682 1.717955      44  Montag    0 night
+    ## 2 2024-01-01 00   A Energie 1.656500 1.774000 1.714000       4  Montag    0 night
+    ## 3 2024-01-01 00     ALLGUTH 1.673444 1.737889 1.684556       9  Montag    0 night
+    ## 4 2024-01-01 00         AMB 1.709000 1.819000 1.759000       1  Montag    0 night
+    ## 5 2024-01-01 00        ARAL 1.794852 1.872968 1.812968    1051  Montag    0 night
+    ## 6 2024-01-01 00        AVIA 1.685993 1.775667 1.715993     153  Montag    0 night
+    ## 7 2024-01-01 00 AVIA Xpress 1.715818 1.800364 1.740364      11  Montag    0 night
 
 We notice that there is not a huge differance in pricing. This might be
 due to larger differences in prices per month.
@@ -228,32 +220,19 @@ df %>%
 print(head(df,12))
 ```
 
-    ##         date_app                    brand   diesel       e5      e10 gr_size
-    ## 1  2024-01-01 00                          1.683295 1.775682 1.717955      44
-    ## 2  2024-01-01 00                A Energie 1.656500 1.774000 1.714000       4
-    ## 3  2024-01-01 00                  ALLGUTH 1.673444 1.737889 1.684556       9
-    ## 4  2024-01-01 00                      AMB 1.709000 1.819000 1.759000       1
-    ## 5  2024-01-01 00                     ARAL 1.794852 1.872968 1.812968    1051
-    ## 6  2024-01-01 00                     AVIA 1.685993 1.775667 1.715993     153
-    ## 7  2024-01-01 00              AVIA Xpress 1.715818 1.800364 1.740364      11
-    ## 8  2024-01-01 00                   Access 1.664000 1.739000 1.679000       2
-    ## 9  2024-01-01 00                     Agip 1.812750 1.901500 1.842750      16
-    ## 10 2024-01-01 00            Ahlert Junior 1.705667 1.792333 1.732333       3
-    ## 11 2024-01-01 00         Argos Tankstelle 1.654000 1.729000 1.669000       4
-    ## 12 2024-01-01 00 Autofit Freie Tankstelle 1.739000 1.804000 1.744000       2
-    ##    weekday hour   tod month
-    ## 1   Montag    0 night    01
-    ## 2   Montag    0 night    01
-    ## 3   Montag    0 night    01
-    ## 4   Montag    0 night    01
-    ## 5   Montag    0 night    01
-    ## 6   Montag    0 night    01
-    ## 7   Montag    0 night    01
-    ## 8   Montag    0 night    01
-    ## 9   Montag    0 night    01
-    ## 10  Montag    0 night    01
-    ## 11  Montag    0 night    01
-    ## 12  Montag    0 night    01
+    ##         date_app                    brand   diesel       e5      e10 gr_size weekday hour   tod month
+    ## 1  2024-01-01 00                          1.683295 1.775682 1.717955      44  Montag    0 night    01
+    ## 2  2024-01-01 00                A Energie 1.656500 1.774000 1.714000       4  Montag    0 night    01
+    ## 3  2024-01-01 00                  ALLGUTH 1.673444 1.737889 1.684556       9  Montag    0 night    01
+    ## 4  2024-01-01 00                      AMB 1.709000 1.819000 1.759000       1  Montag    0 night    01
+    ## 5  2024-01-01 00                     ARAL 1.794852 1.872968 1.812968    1051  Montag    0 night    01
+    ## 6  2024-01-01 00                     AVIA 1.685993 1.775667 1.715993     153  Montag    0 night    01
+    ## 7  2024-01-01 00              AVIA Xpress 1.715818 1.800364 1.740364      11  Montag    0 night    01
+    ## 8  2024-01-01 00                   Access 1.664000 1.739000 1.679000       2  Montag    0 night    01
+    ## 9  2024-01-01 00                     Agip 1.812750 1.901500 1.842750      16  Montag    0 night    01
+    ## 10 2024-01-01 00            Ahlert Junior 1.705667 1.792333 1.732333       3  Montag    0 night    01
+    ## 11 2024-01-01 00         Argos Tankstelle 1.654000 1.729000 1.669000       4  Montag    0 night    01
+    ## 12 2024-01-01 00 Autofit Freie Tankstelle 1.739000 1.804000 1.744000       2  Montag    0 night    01
 
 So averaging over, e.g., every **monday**, results in an outcome that’s
 to flat.
