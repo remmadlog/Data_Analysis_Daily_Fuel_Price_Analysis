@@ -333,16 +333,3 @@ we notice that best time to refuel is a 09:00pm.
 ```
 
 
-> Reverse the order, start by ``weekly``
-To dos:
-- when
-  - hour
-  - time of day
-  - weekday
-- where (brand)
-  - hour
-  - time of day
-  - weekday
-- plotting (animation)
-  - cheapest brand over time (one fuel)
-  - fuel price over time (3 fuels, one plot)
