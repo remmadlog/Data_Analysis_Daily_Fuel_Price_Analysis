@@ -64,8 +64,8 @@ The best **time of day** is the **evening**.
 
 The best **time** is **09:00pm**.
 
-This does not mean that **Friday** at **09:00pm** is always the best time to refuel **e10**.
-This marly means that **Friday** is a good day, the **evening** is a solid time versinkt and that **09:00pm** is a cheap time **IN GENERAL**.
+This does not mean that **Monday** at **09:00pm** is always the best time to refuel **e10**.
+This marly means that **Monday** is a good day, the **evening** is a solid time versinkt and that **09:00pm** is a cheap time **IN GENERAL**.
 
 
 ## Brand consideration
