@@ -1,7 +1,31 @@
 Daily German Fuel Price Analysis (2024)
 ================
 
-## Dataset
+# TOC
+
+<details>
+
+<summary>
+
+Click to show
+</summary>
+
+- [Dataset](#dataset)
+- [When Should You Refuel?](#when-should-you-refuel)
+  - [Preparation and Transformation](#preparation-and-transformation)
+  - [Analysis](#analysis)
+    - [Fuel Price by Weekday](#fuel-price-by-weekday)
+    - [Best Time of Day to Refuel](#best-time-of-day-to-refuel)
+    - [Best Time to Refuel](#best-time-to-refuel)
+    - [Best combination](#best-combination)
+- [Where to Refuel?](#where-to-refuel)
+  - [Brand Analysis](#brand-analysis)
+
+</details>
+
+------------------------------------------------------------------------
+
+# Dataset
 
 The dataset we are using can be found
 [here](https://dev.azure.com/tankerkoenig/_git/tankerkoenig-data?path=/README.md&_a=preview).
@@ -33,6 +57,8 @@ Since the dataset ist quit detailed, and therefor very large (about
 column that rounds to the full hour and aggregate all by that and brand.
 Therefore, we will no longer have the unique station information, but we
 will end up with a more manageable amount of data.
+
+# When Should You Refuel?
 
 ## Preparation and Transformation
 
@@ -220,19 +246,19 @@ df %>%
 print(head(df,12))
 ```
 
-    ##         date_app                    brand   diesel       e5      e10 gr_size    weekday hour   tod month
-    ## 1  2024-01-01 00                          1.683295 1.775682 1.717955      44    Montag    0 night    01
-    ## 2  2024-01-01 00                A Energie 1.656500 1.774000 1.714000       4    Montag    0 night    01
-    ## 3  2024-01-01 00                  ALLGUTH 1.673444 1.737889 1.684556       9    Montag    0 night    01
-    ## 4  2024-01-01 00                      AMB 1.709000 1.819000 1.759000       1    Montag    0 night    01
-    ## 5  2024-01-01 00                     ARAL 1.794852 1.872968 1.812968    1051    Montag    0 night    01
-    ## 6  2024-01-01 00                     AVIA 1.685993 1.775667 1.715993     153    Montag    0 night    01
-    ## 7  2024-01-01 00              AVIA Xpress 1.715818 1.800364 1.740364      11    Montag    0 night    01
-    ## 8  2024-01-01 00                   Access 1.664000 1.739000 1.679000       2    Montag    0 night    01
-    ## 9  2024-01-01 00                     Agip 1.812750 1.901500 1.842750      16    Montag    0 night    01
-    ## 10 2024-01-01 00            Ahlert Junior 1.705667 1.792333 1.732333       3    Montag    0 night    01
-    ## 11 2024-01-01 00         Argos Tankstelle 1.654000 1.729000 1.669000       4    Montag    0 night    01
-    ## 12 2024-01-01 00 Autofit Freie Tankstelle 1.739000 1.804000 1.744000       2    Montag    0 night    01
+    ##         date_app                    brand   diesel       e5      e10 gr_sizeweekday hour   tod month
+    ## 1  2024-01-01 00                          1.683295 1.775682 1.717955      44 Montag    0 night    01
+    ## 2  2024-01-01 00                A Energie 1.656500 1.774000 1.714000       4 Montag    0 night    01
+    ## 3  2024-01-01 00                  ALLGUTH 1.673444 1.737889 1.684556       9 Montag    0 night    01
+    ## 4  2024-01-01 00                      AMB 1.709000 1.819000 1.759000       1 Montag    0 night    01
+    ## 5  2024-01-01 00                     ARAL 1.794852 1.872968 1.812968    1051 Montag    0 night    01
+    ## 6  2024-01-01 00                     AVIA 1.685993 1.775667 1.715993     153 Montag    0 night    01
+    ## 7  2024-01-01 00              AVIA Xpress 1.715818 1.800364 1.740364      11 Montag    0 night    01
+    ## 8  2024-01-01 00                   Access 1.664000 1.739000 1.679000       2 Montag    0 night    01
+    ## 9  2024-01-01 00                     Agip 1.812750 1.901500 1.842750      16 Montag    0 night    01
+    ## 10 2024-01-01 00            Ahlert Junior 1.705667 1.792333 1.732333       3 Montag    0 night    01
+    ## 11 2024-01-01 00         Argos Tankstelle 1.654000 1.729000 1.669000       4 Montag    0 night    01
+    ## 12 2024-01-01 00 Autofit Freie Tankstelle 1.739000 1.804000 1.744000       2 Montag    0 night    01
 
 So averaging over, e.g., every **monday**, results in an outcome that’s
 to flat.
@@ -509,3 +535,142 @@ print(head(df_comb_diesel,10))
     ##  8 Dienstag   evening    21            44      1.60
     ##  9 Montag     evening    21            44      1.60
     ## 10 Freitag    evening    21            40      1.60
+
+# Where to Refuel?
+
+## Brand Analysis
+
+We start by calculating the brands with the highest amount of having the
+lowest price per day for e10. Here is no consideration of how common the
+brand is or how many stations there are
+
+``` r
+temp <- df %>%
+  group_by(day,brand) %>%                         # group brand per day
+  summarise(e10 = mean(e10)) %>%                  # calculate av price for each entry -> ungroups subgroup (brand)
+  filter(e10 == min(e10)) %>%                     # find min for each group (day)
+  group_by(brand) %>%                             # groups each brand over possible 366 days
+  summarise(e10 = mean(e10), size=n()) %>%        # calculate av price per brand and count group size (how often was it min)
+  arrange(desc(size))
+```
+
+Having a look at the output:
+
+``` r
+print(head(temp,6))
+```
+
+    ## # A tibble: 6 × 3
+    ##   brand                     e10  size
+    ##   <chr>                   <dbl> <int>
+    ## 1 Union Zapfstelle         1.60    98
+    ## 2 Tankstelle Scharlibbe    1.65    74
+    ## 3 GILLET tanken & waschen  1.58    42
+    ## 4 V-Markt Mainburg         1.65    15
+    ## 5 Winkler 24h              1.58    13
+    ## 6 DONIG ARAL-Vertrieb      1.65    10
+
+In order to take the amount of stations by brand in consideration we
+consider `stations.csv`.
+
+``` r
+df_station <- read.csv("Datasets/stations.csv")
+
+df_brand_size <- df_station %>%
+  filter(brand!="") %>%           # rmoving unknown brands (blank)
+  group_by(brand) %>%
+  summarise(size=n()) %>%         # count how many stations are there (size of group)
+  arrange(desc(size))
+```
+
+We will only consider brand with more than `fsize` stations. In our case
+we set `fsize = 300`.
+
+``` r
+fsize <- 300
+
+df_brand_size_fsize <- df_brand_size %>%
+  filter(size >= fsize)
+```
+
+Repeating the evaluation from before, but only considering brand with
+300 or more stations.
+
+``` r
+temp <- df %>%
+  filter(brand %in% df_brand_size_fsize$brand) %>%
+  group_by(day,brand) %>%                         # group brand per day
+  summarise(e10 = mean(e10))  %>%                 # calculate av price for each entry -> ungroups subgroup (brand)
+  filter(e10 == min(e10)) %>%                     # find min for each group (day)
+  group_by(brand) %>%                             # groups each brand over possible 366 days
+  summarise(e10 = mean(e10), size=n()) %>%        # calculate av price per brand and count group size (how often was it min)
+  arrange(desc(size))
+```
+
+Leads to the following:
+
+``` r
+print(head(temp,6))
+```
+
+    ## # A tibble: 5 × 3
+    ##   brand   e10  size
+    ##   <chr> <dbl> <int>
+    ## 1 JET    1.70   211
+    ## 2 STAR   1.72    76
+    ## 3 HEM    1.71    58
+    ## 4 AVIA   1.78    20
+    ## 5 ESSO   1.66     1
+
+We see that **JET** is on **211** days the cheapest brand on average for
+e10, out of 366 possible days of 2024.
+
+For **e5** and **diesel** we are following the example above:
+
+``` r
+temp_e5 <- df %>%
+  filter(brand %in% df_brand_size_fsize$brand) %>%
+  group_by(day,brand) %>%                         # group brand per day
+  summarise(e5 = mean(e5))  %>%                 # calculate av price for each entry -> ungroups subgroup (brand)
+  filter(e5 == min(e5)) %>%                     # find min for each group (day)
+  group_by(brand) %>%                             # groups each brand over possible 366 days
+  summarise(e5 = mean(e5), size=n()) %>%        # calculate av price per brand and count group size (how often was it min)
+  arrange(desc(size))
+
+temp_diesel <- df %>%
+  filter(brand %in% df_brand_size_fsize$brand) %>%
+  group_by(day,brand) %>%                         # group brand per day
+  summarise(diesel = mean(diesel))  %>%                 # calculate av price for each entry -> ungroups subgroup (brand)
+  filter(diesel == min(diesel)) %>%                     # find min for each group (day)
+  group_by(brand) %>%                             # groups each brand over possible 366 days
+  summarise(diesel = mean(diesel), size=n()) %>%        # calculate av price per brand and count group size (how often was it min)
+  arrange(desc(size))
+```
+
+Leads to the following:
+
+``` r
+print(head(temp_e5,6))
+```
+
+    ## # A tibble: 6 × 3
+    ##   brand         e5  size
+    ##   <chr>      <dbl> <int>
+    ## 1 JET         1.76   202
+    ## 2 STAR        1.77    86
+    ## 3 HEM         1.77    52
+    ## 4 AVIA        1.84    19
+    ## 5 Raiffeisen  1.80     5
+    ## 6 ESSO        1.70     2
+
+``` r
+print(head(temp_diesel,6))
+```
+
+    ## # A tibble: 4 × 3
+    ##   brand      diesel  size
+    ##   <chr>       <dbl> <int>
+    ## 1 Raiffeisen   1.64   162
+    ## 2 JET          1.61   112
+    ## 3 STAR         1.61    91
+    ## 4 HEM          1.54     1
