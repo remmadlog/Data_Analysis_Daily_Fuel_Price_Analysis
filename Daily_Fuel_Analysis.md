@@ -1,4 +1,4 @@
-Daily German Fuel Price Analysis for 2024
+Daily German Fuel Price Analysis (2024)
 ================
 
 ## Dataset
@@ -220,19 +220,19 @@ df %>%
 print(head(df,12))
 ```
 
-    ##         date_app                    brand   diesel       e5      e10 gr_size weekday hour   tod month
-    ## 1  2024-01-01 00                          1.683295 1.775682 1.717955      44  Montag    0 night    01
-    ## 2  2024-01-01 00                A Energie 1.656500 1.774000 1.714000       4  Montag    0 night    01
-    ## 3  2024-01-01 00                  ALLGUTH 1.673444 1.737889 1.684556       9  Montag    0 night    01
-    ## 4  2024-01-01 00                      AMB 1.709000 1.819000 1.759000       1  Montag    0 night    01
-    ## 5  2024-01-01 00                     ARAL 1.794852 1.872968 1.812968    1051  Montag    0 night    01
-    ## 6  2024-01-01 00                     AVIA 1.685993 1.775667 1.715993     153  Montag    0 night    01
-    ## 7  2024-01-01 00              AVIA Xpress 1.715818 1.800364 1.740364      11  Montag    0 night    01
-    ## 8  2024-01-01 00                   Access 1.664000 1.739000 1.679000       2  Montag    0 night    01
-    ## 9  2024-01-01 00                     Agip 1.812750 1.901500 1.842750      16  Montag    0 night    01
-    ## 10 2024-01-01 00            Ahlert Junior 1.705667 1.792333 1.732333       3  Montag    0 night    01
-    ## 11 2024-01-01 00         Argos Tankstelle 1.654000 1.729000 1.669000       4  Montag    0 night    01
-    ## 12 2024-01-01 00 Autofit Freie Tankstelle 1.739000 1.804000 1.744000       2  Montag    0 night    01
+    ##         date_app                    brand   diesel       e5      e10 gr_size    weekday hour   tod month
+    ## 1  2024-01-01 00                          1.683295 1.775682 1.717955      44    Montag    0 night    01
+    ## 2  2024-01-01 00                A Energie 1.656500 1.774000 1.714000       4    Montag    0 night    01
+    ## 3  2024-01-01 00                  ALLGUTH 1.673444 1.737889 1.684556       9    Montag    0 night    01
+    ## 4  2024-01-01 00                      AMB 1.709000 1.819000 1.759000       1    Montag    0 night    01
+    ## 5  2024-01-01 00                     ARAL 1.794852 1.872968 1.812968    1051    Montag    0 night    01
+    ## 6  2024-01-01 00                     AVIA 1.685993 1.775667 1.715993     153    Montag    0 night    01
+    ## 7  2024-01-01 00              AVIA Xpress 1.715818 1.800364 1.740364      11    Montag    0 night    01
+    ## 8  2024-01-01 00                   Access 1.664000 1.739000 1.679000       2    Montag    0 night    01
+    ## 9  2024-01-01 00                     Agip 1.812750 1.901500 1.842750      16    Montag    0 night    01
+    ## 10 2024-01-01 00            Ahlert Junior 1.705667 1.792333 1.732333       3    Montag    0 night    01
+    ## 11 2024-01-01 00         Argos Tankstelle 1.654000 1.729000 1.669000       4    Montag    0 night    01
+    ## 12 2024-01-01 00 Autofit Freie Tankstelle 1.739000 1.804000 1.744000       2    Montag    0 night    01
 
 So averaging over, e.g., every **monday**, results in an outcome that’s
 to flat.
@@ -258,7 +258,7 @@ df_weekdays <- df %>%
     filter(e10 == min(e10, na.rm=TRUE)) %>%
     group_by(weekday) %>%
     summarise(amount_e10 = n()) %>%
-    arrange(amount_e10)
+    arrange(desc(amount_e10))
 ```
 
 For **e10** we see that **Mondays** and **Tuesdays** are the best ways
@@ -273,7 +273,7 @@ temp <- df %>%
     filter(e5 == min(e5, na.rm=TRUE)) %>%
     group_by(weekday) %>%
     summarise(amount_e5 = n()) %>%
-    arrange(amount_e5)
+    arrange(desc(amount_e5))
 
 df_weekdays <- left_join(df_weekdays,temp, by = "weekday")
 
@@ -283,7 +283,7 @@ temp <- df %>%
     filter(diesel == min(diesel, na.rm=TRUE)) %>%
     group_by(weekday) %>%
     summarise(amount_diesel = n()) %>%
-    arrange(amount_diesel)
+    arrange(desc(amount_diesel))
 
 df_weekdays <- left_join(df_weekdays,temp, by = "weekday")
 ```
@@ -297,13 +297,13 @@ print(df_weekdays)
     ## # A tibble: 7 × 4
     ##   weekday    amount_e10 amount_e5 amount_diesel
     ##   <chr>           <int>     <int>         <int>
-    ## 1 Freitag             4         4             8
-    ## 2 Samstag             5         5             5
-    ## 3 Sonntag             6         6             5
-    ## 4 Donnerstag          8         8            11
-    ## 5 Mittwoch            8         8             9
-    ## 6 Dienstag           10        10             8
-    ## 7 Montag             11        11             6
+    ## 1 Montag             11        11             6
+    ## 2 Dienstag           10        10             8
+    ## 3 Donnerstag          8         8            11
+    ## 4 Mittwoch            8         8             9
+    ## 5 Sonntag             6         6             5
+    ## 6 Samstag             5         5             5
+    ## 7 Freitag             4         4             8
 
 Using this procedure we continue to figure out the best time to refuel.
 \### Best Time of Day to Refuel
@@ -323,7 +323,7 @@ df_tod <- df %>%
     filter(e10 == min(e10)) %>%
     group_by(tod) %>%
     summarise(amount_e10 = n()) %>%
-    arrange(amount_e10)
+    arrange(desc(amount_e10))
 
 temp <- df %>%
     group_by(day, tod) %>%
@@ -331,7 +331,7 @@ temp <- df %>%
     filter(e5 == min(e5)) %>%
     group_by(tod) %>%
     summarise(amount_e5 = n()) %>%
-    arrange(amount_e5)
+    arrange(desc(amount_e5))
 
 df_tod <- left_join(df_tod, temp, by="tod")
 
@@ -342,7 +342,7 @@ temp <- df %>%
     filter(diesel == min(diesel)) %>%
     group_by(tod) %>%
     summarise(amount_diesel = n()) %>%
-    arrange(amount_diesel)
+    arrange(desc(amount_diesel))
 
 df_tod <- left_join(df_tod, temp, by="tod")
 ```
@@ -373,7 +373,7 @@ df_h <- df %>%
     filter(e10 == min(e10)) %>%
     group_by(hour) %>%
     summarise(amount_e10 = n()) %>%
-    arrange(amount_e10)
+    arrange(desc(amount_e10))
 
 temp <- df %>%
     group_by(day, hour) %>%
@@ -381,7 +381,7 @@ temp <- df %>%
     filter(e5 == min(e5)) %>%
     group_by(hour) %>%
     summarise(amount_e5 = n()) %>%
-    arrange(amount_e5)
+    arrange(desc(amount_e5))
 
 df_h <- left_join(df_h, temp, by="hour")
 
@@ -392,7 +392,7 @@ temp <- df %>%
     filter(diesel == min(diesel)) %>%
     group_by(hour) %>%
     summarise(amount_diesel = n()) %>%
-    arrange(amount_diesel)
+    arrange(desc(amount_diesel))
 
 df_h <- left_join(df_h, temp, by="hour")
 ```
@@ -406,11 +406,106 @@ print(df_h)
     ## # A tibble: 4 × 4
     ##    hour amount_e10 amount_e5 amount_diesel
     ##   <int>      <int>     <int>         <int>
-    ## 1    11          2         1             1
-    ## 2    18         22        21            11
-    ## 3    19         73        81            71
-    ## 4    21        269       263           282
+    ## 1    21        269       263           282
+    ## 2    19         73        81            71
+    ## 3    18         22        21            11
+    ## 4    11          2         1             1
 
 we notice that best time to refuel is a 09:00pm.
 
+### Best combination
 
+We do the same as before but we group for all components, namely for
+`nweek, weekday, tod` and `hour`. In order to calculate a average price.
+Then match it with the minimum per group, that is given by
+`weekday, tod` and `hour`. Counting the amount of occupying minima we
+obtain the following:
+
+``` r
+df_comb_e10 <- df %>%
+    group_by(nweek, weekday, tod, hour) %>%
+    summarise(e10=mean(e10)) %>%
+    filter(e10 == min(e10)) %>%
+    group_by(weekday, tod, hour) %>%
+    summarise(amount_e10 = n(), av_e10 = mean(e10)) %>%
+    arrange(desc(amount_e10))
+```
+
+``` r
+print(head(df_comb_e10,10))
+```
+
+    ## # A tibble: 10 × 5
+    ## # Groups:   weekday, tod [10]
+    ##    weekday    tod      hour amount_e10 av_e10
+    ##    <chr>      <chr>   <int>      <int>  <dbl>
+    ##  1 Donnerstag morning    11         52   1.71
+    ##  2 Freitag    morning    11         52   1.71
+    ##  3 Mittwoch   morning    11         52   1.71
+    ##  4 Montag     morning    11         52   1.71
+    ##  5 Samstag    morning    11         52   1.71
+    ##  6 Sonntag    morning    11         52   1.70
+    ##  7 Dienstag   morning    11         50   1.70
+    ##  8 Montag     evening    21         42   1.69
+    ##  9 Samstag    evening    21         42   1.68
+    ## 10 Sonntag    night       0         42   1.73
+
+Doing the same for **e5** and \*\*diesel:
+
+``` r
+df_comb_e5 <- df %>%
+    group_by(nweek, weekday, tod, hour) %>%
+    summarise(e5=mean(e5)) %>%
+    filter(e5 == min(e5)) %>%
+    group_by(weekday, tod, hour) %>%
+    summarise(amount_e5 = n(), av_e5 = mean(e5)) %>%
+    arrange(desc(amount_e5))
+```
+
+``` r
+print(head(df_comb_e5,10))
+```
+
+    ## # A tibble: 10 × 5
+    ## # Groups:   weekday, tod [10]
+    ##    weekday    tod      hour amount_e5 av_e5
+    ##    <chr>      <chr>   <int>     <int> <dbl>
+    ##  1 Dienstag   morning    11        52  1.76
+    ##  2 Donnerstag morning    11        52  1.76
+    ##  3 Freitag    morning    11        52  1.76
+    ##  4 Mittwoch   morning    11        52  1.76
+    ##  5 Montag     morning    11        52  1.77
+    ##  6 Samstag    morning    11        52  1.76
+    ##  7 Sonntag    morning    11        52  1.76
+    ##  8 Samstag    evening    21        44  1.74
+    ##  9 Montag     evening    21        42  1.74
+    ## 10 Freitag    evening    21        41  1.74
+
+``` r
+df_comb_diesel <- df %>%
+    group_by(nweek, weekday, tod, hour) %>%
+    summarise(diesel=mean(diesel)) %>%
+    filter(diesel == min(diesel)) %>%
+    group_by(weekday, tod, hour) %>%
+    summarise(amount_diesel = n(), av_diesel = mean(diesel)) %>%
+    arrange(desc(amount_diesel))
+```
+
+``` r
+print(head(df_comb_diesel,10))
+```
+
+    ## # A tibble: 10 × 5
+    ## # Groups:   weekday, tod [10]
+    ##    weekday    tod      hour amount_diesel av_diesel
+    ##    <chr>      <chr>   <int>         <int>     <dbl>
+    ##  1 Donnerstag morning    11            52      1.61
+    ##  2 Freitag    morning    11            52      1.62
+    ##  3 Mittwoch   morning    11            52      1.61
+    ##  4 Montag     morning    11            52      1.62
+    ##  5 Samstag    morning    11            52      1.61
+    ##  6 Sonntag    morning    11            52      1.61
+    ##  7 Dienstag   morning    11            50      1.61
+    ##  8 Dienstag   evening    21            44      1.60
+    ##  9 Montag     evening    21            44      1.60
+    ## 10 Freitag    evening    21            40      1.60

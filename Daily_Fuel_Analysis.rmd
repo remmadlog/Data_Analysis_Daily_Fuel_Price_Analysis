@@ -203,7 +203,7 @@ df_weekdays <- df %>%
     filter(e10 == min(e10, na.rm=TRUE)) %>%
     group_by(weekday) %>%
     summarise(amount_e10 = n()) %>%
-    arrange(amount_e10)
+    arrange(desc(amount_e10))
 ```
 
 For **e10** we see that **Mondays** and **Tuesdays** are the best ways to refile in general.
@@ -216,7 +216,7 @@ temp <- df %>%
     filter(e5 == min(e5, na.rm=TRUE)) %>%
     group_by(weekday) %>%
     summarise(amount_e5 = n()) %>%
-    arrange(amount_e5)
+    arrange(desc(amount_e5))
 
 df_weekdays <- left_join(df_weekdays,temp, by = "weekday")
 
@@ -226,7 +226,7 @@ temp <- df %>%
     filter(diesel == min(diesel, na.rm=TRUE)) %>%
     group_by(weekday) %>%
     summarise(amount_diesel = n()) %>%
-    arrange(amount_diesel)
+    arrange(desc(amount_diesel))
 
 df_weekdays <- left_join(df_weekdays,temp, by = "weekday")
 ```
@@ -254,7 +254,7 @@ df_tod <- df %>%
     filter(e10 == min(e10)) %>%
     group_by(tod) %>%
     summarise(amount_e10 = n()) %>%
-    arrange(amount_e10)
+    arrange(desc(amount_e10))
 
 temp <- df %>%
     group_by(day, tod) %>%
@@ -262,7 +262,7 @@ temp <- df %>%
     filter(e5 == min(e5)) %>%
     group_by(tod) %>%
     summarise(amount_e5 = n()) %>%
-    arrange(amount_e5)
+    arrange(desc(amount_e5))
 
 df_tod <- left_join(df_tod, temp, by="tod")
 
@@ -273,7 +273,7 @@ temp <- df %>%
     filter(diesel == min(diesel)) %>%
     group_by(tod) %>%
     summarise(amount_diesel = n()) %>%
-    arrange(amount_diesel)
+    arrange(desc(amount_diesel))
 
 df_tod <- left_join(df_tod, temp, by="tod")
 ```
@@ -296,7 +296,7 @@ df_h <- df %>%
     filter(e10 == min(e10)) %>%
     group_by(hour) %>%
     summarise(amount_e10 = n()) %>%
-    arrange(amount_e10)
+    arrange(desc(amount_e10))
 
 temp <- df %>%
     group_by(day, hour) %>%
@@ -304,7 +304,7 @@ temp <- df %>%
     filter(e5 == min(e5)) %>%
     group_by(hour) %>%
     summarise(amount_e5 = n()) %>%
-    arrange(amount_e5)
+    arrange(desc(amount_e5))
 
 df_h <- left_join(df_h, temp, by="hour")
 
@@ -315,7 +315,7 @@ temp <- df %>%
     filter(diesel == min(diesel)) %>%
     group_by(hour) %>%
     summarise(amount_diesel = n()) %>%
-    arrange(amount_diesel)
+    arrange(desc(amount_diesel))
 
 df_h <- left_join(df_h, temp, by="hour")
 ```
@@ -326,10 +326,49 @@ print(df_h)
 ```
 we notice that best time to refuel is a 09:00pm.
 
+### Best combination
 
-
+We do the same as before but we group for all components, namely for ``nweek, weekday, tod`` and ``hour``.
+In order to calculate a average price.
+Then match it with the minimum per group, that is given by ``weekday, tod`` and ``hour``.
+Counting the amount of occupying minima we obtain the following:
 ```{r warning=FALSE,message=FALSE}
+df_comb_e10 <- df %>%
+    group_by(nweek, weekday, tod, hour) %>%
+    summarise(e10=mean(e10)) %>%
+    filter(e10 == min(e10)) %>%
+    group_by(weekday, tod, hour) %>%
+    summarise(amount_e10 = n(), av_e10 = mean(e10)) %>%
+    arrange(desc(amount_e10))
+```
+```{r}
+print(head(df_comb_e10,10))
+```
 
+Doing the same for **e5** and **diesel:
+```{r warning=FALSE,message=FALSE}
+df_comb_e5 <- df %>%
+    group_by(nweek, weekday, tod, hour) %>%
+    summarise(e5=mean(e5)) %>%
+    filter(e5 == min(e5)) %>%
+    group_by(weekday, tod, hour) %>%
+    summarise(amount_e5 = n(), av_e5 = mean(e5)) %>%
+    arrange(desc(amount_e5))
+```
+```{r}
+print(head(df_comb_e5,10))
 ```
 
 
+```{r warning=FALSE,message=FALSE}
+df_comb_diesel <- df %>%
+    group_by(nweek, weekday, tod, hour) %>%
+    summarise(diesel=mean(diesel)) %>%
+    filter(diesel == min(diesel)) %>%
+    group_by(weekday, tod, hour) %>%
+    summarise(amount_diesel = n(), av_diesel = mean(diesel)) %>%
+    arrange(desc(amount_diesel))
+```
+```{r}
+print(head(df_comb_diesel,10))
+```
