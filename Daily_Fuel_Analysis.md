@@ -43,7 +43,7 @@ file (day) - join the station information, to obtain the `brand`
 column - create a date approximation column `date_app`, contain date of
 day and the full hour - group by `date_app` and `brand`
 
-The script can be found [here](transforming_cleaning.R)
+The script can be found [here](transforming_cleaning_agg_date_brand.R)
 
 ``` r
 # joining/merging dataframes

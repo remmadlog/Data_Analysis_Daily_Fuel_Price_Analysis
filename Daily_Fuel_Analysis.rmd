@@ -3,7 +3,26 @@ title: "Daily German Fuel Price Analysis (2024)"
 output: rmarkdown::github_document
 ---
 
-## Dataset
+# TOC
+<details>
+  <summary>Click to show</summary>
+
+- [Dataset](#dataset)
+- [When Should You Refuel?](#when-should-you-refuel)
+  * [Preparation and Transformation](#preparation-and-transformation)
+  * [Analysis](#analysis)
+    + [Fuel Price by Weekday](#fuel-price-by-weekday)
+    + [Best Time of Day to Refuel](#best-time-of-day-to-refuel)
+    + [Best Time to Refuel](#best-time-to-refuel)
+    + [Best combination](#best-combination)
+- [Where to Refuel?](#where-to-refuel)
+  * [Brand Analysis](#brand-analysis)
+
+</details>
+
+---
+
+# Dataset
 The dataset we are using can be found [here](https://dev.azure.com/tankerkoenig/_git/tankerkoenig-data?path=/README.md&_a=preview).
 There one can obtain way more data for different years.
 We will only focus on the year 2024.
@@ -34,6 +53,8 @@ Since the dataset ist quit detailed, and therefor very large (about 11.5GB), we 
 We will add a ``date_app`` column that rounds to the full hour and aggregate all by that and brand.
 Therefore, we will no longer have the unique station information, but we will end up with a more manageable amount of data.
 
+# When Should You Refuel?
+
 ## Preparation and Transformation
 
 For each month there is a different folder labeled ``01`` to ``12``.
@@ -45,7 +66,7 @@ We will do the following:
     - create a date approximation column ``date_app``, contain date of day and the full hour
     - group by ``date_app`` and ``brand``
 
-The script can be found [here](transforming_cleaning.R)
+The script can be found [here](transforming_cleaning_agg_date_brand.R)
 ```r
 # joining/merging dataframes
 library(dplyr)
@@ -371,4 +392,116 @@ df_comb_diesel <- df %>%
 ```
 ```{r}
 print(head(df_comb_diesel,10))
+```
+
+
+
+# Where to Refuel?
+
+## Brand Analysis
+
+We start by calculating the brands with the highest amount of having the lowest price per day for e10.
+Here is no consideration of how common the brand is or how many stations there are
+
+```{r warning=FALSE,message=FALSE}
+temp <- df %>%
+  group_by(day,brand) %>%                         # group brand per day
+  summarise(e10 = mean(e10)) %>%                  # calculate av price for each entry -> ungroups subgroup (brand)
+  filter(e10 == min(e10)) %>%                     # find min for each group (day)
+  group_by(brand) %>%                             # groups each brand over possible 366 days
+  summarise(e10 = mean(e10), size=n()) %>%        # calculate av price per brand and count group size (how often was it min)
+  arrange(desc(size))
+```
+
+Having a look at the output:
+```{r}
+print(head(temp,6))
+```
+
+
+
+In order to take the amount of stations by brand in consideration we consider ``stations.csv``.
+```{r warning=FALSE,message=FALSE}
+df_station <- read.csv("Datasets/stations.csv")
+
+df_brand_size <- df_station %>%
+  filter(brand!="") %>%           # rmoving unknown brands (blank)
+  group_by(brand) %>%
+  summarise(size=n()) %>%         # count how many stations are there (size of group)
+  arrange(desc(size))
+```
+
+
+We will only consider brand with more than ``fsize`` stations.
+In our case we set ``fsize = 300``.
+
+```{r warning=FALSE,message=FALSE}
+fsize <- 300
+
+df_brand_size_fsize <- df_brand_size %>%
+  filter(size >= fsize)
+```
+
+Repeating the evaluation from before, but only considering brand with 300 or more stations.
+```{r warning=FALSE,message=FALSE}
+temp <- df %>%
+  filter(brand %in% df_brand_size_fsize$brand) %>%
+  group_by(day,brand) %>%                         # group brand per day
+  summarise(e10 = mean(e10))  %>%                 # calculate av price for each entry -> ungroups subgroup (brand)
+  filter(e10 == min(e10)) %>%                     # find min for each group (day)
+  group_by(brand) %>%                             # groups each brand over possible 366 days
+  summarise(e10 = mean(e10), size=n()) %>%        # calculate av price per brand and count group size (how often was it min)
+  arrange(desc(size))
+```
+
+Leads to the following:
+```{r}
+print(head(temp,6))
+```
+
+
+We see that **JET** is on **211** days the cheapest brand on average for e10, out of 366 possible days of 2024.
+
+For **e5** and **diesel** we are following the example above:
+```{r warning=FALSE,message=FALSE}
+temp_e5 <- df %>%
+  filter(brand %in% df_brand_size_fsize$brand) %>%
+  group_by(day,brand) %>%                         # group brand per day
+  summarise(e5 = mean(e5))  %>%                 # calculate av price for each entry -> ungroups subgroup (brand)
+  filter(e5 == min(e5)) %>%                     # find min for each group (day)
+  group_by(brand) %>%                             # groups each brand over possible 366 days
+  summarise(e5 = mean(e5), size=n()) %>%        # calculate av price per brand and count group size (how often was it min)
+  arrange(desc(size))
+
+temp_diesel <- df %>%
+  filter(brand %in% df_brand_size_fsize$brand) %>%
+  group_by(day,brand) %>%                         # group brand per day
+  summarise(diesel = mean(diesel))  %>%                 # calculate av price for each entry -> ungroups subgroup (brand)
+  filter(diesel == min(diesel)) %>%                     # find min for each group (day)
+  group_by(brand) %>%                             # groups each brand over possible 366 days
+  summarise(diesel = mean(diesel), size=n()) %>%        # calculate av price per brand and count group size (how often was it min)
+  arrange(desc(size))
+
+```
+
+Leads to the following:
+```{r}
+print(head(temp_e5,6))
+```
+```{r}
+print(head(temp_diesel,6))
+```
+
+
+
+
+
+
+
+
+
+
+
+```{r warning=FALSE,message=FALSE}
+
 ```

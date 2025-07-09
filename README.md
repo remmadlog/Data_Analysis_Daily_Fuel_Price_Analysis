@@ -1,3 +1,25 @@
+# TOC
+<details>
+  <summary>Click to show</summary>
+
+  - [Daily Fuel Prices in Germany in 2024](#daily-fuel-prices-in-germany-in-2024)
+    * [Best Day to Refuel](#best-day-to-refuel)
+      * [Best Time of Day to Refuel](#best-time-of-day-to-refuel)
+      * [Best Time to Refuel](#best-time-to-refuel)
+      * [Best Combination of Weekday, Time of Day and Hour](#best-combination-of-weekday-time-of-day-and-hour)
+        + [e10:](#e10)
+        + [e5:](#e5)
+        + [diesel:](#diesel)
+      * [Conclusion](#conclusion)
+        + [For the non combine investigation we see the following:](#for-the-non-combine-investigation-we-see-the-following)
+        + [For the combined investigation we see the following:](#for-the-combined-investigation-we-see-the-following)
+      * [Brand consideration](#brand-consideration)
+
+</details>
+
+---
+
+
 # Daily Fuel Prices in Germany in 2024
 
 This project is a learning project.
@@ -10,9 +32,26 @@ We will mainly use **R** to answer the following questions:
 
 > For questions related to an even more general overview, like month behaviour, we refer to [this](https://github.com/remmadlog/Data_Analysis_Fuel_Prices/tree/master) project.
 
+> The dataset used can be found [here](https://dev.azure.com/tankerkoenig/_git/tankerkoenig-data?path=/README.md&_a=preview).
+
+> Folderstructure:
+> - Dataset
+>   - 2024
+>     - 01
+>       - 2024-01-01-prices.csv
+>       - ...
+>       - 2024-01-31-prices.csv
+>     - ...
+>       - ...
+>     - 12
+>       - ...
+>   - ``agg_dataset.csv``
+>   - ``stations.scv``
+
 > For an overview of the code see the ``.rmd`` [Daily_Fuel_Analysis.md](Daily_Fuel_Analysis.md) or the ``.R`` files 
 > [time_analysis.R](time_analysis.R)
-> [transforming_cleaning.R](transforming_cleaning.R)
+> [transforming_cleaning_agg_date_brand.R](transforming_cleaning_agg_date_brand.R)
+> [brand_analysis.R](brand_analysis.R)
 
 ## Best Day to Refuel
 To avoid getting a too general average, I decided to track the cheapest day of each week in 2024.
@@ -145,4 +184,21 @@ Might be a good idea to combine this.
 
 
 ## Brand consideration
-_WIP_
+
+Answering the question of **Where to refuel?**, we proceed as follows:
+First we only consider **brands** with at least **300** stations.
+Then we continue to proceed as before, by counting how often a brand has the lowest price out of 366 days.
+Thus, resulting in the following table:
+
+| e10 | brand | amount | e5 | brand      | amount   | diesel  | brand      | amount  |
+|-----|-------|--------|----|------------|----------|---------|------------|---------|
+|     | JET   | 211    |    | JET        | 202      |         | Raiffeisen | 162     |
+|     | STAR  | 76     |    | STAR       | 86       |         | JET        | 112     |
+|     | HEM   | 58     |    | HEM        | 52       |         | STAR       | 91      |
+|     | AVIA  | 20     |    | AVIA       | 19       |         | HEM        | 1       |
+|     | ESSO  | 1      |    | Raiffeisen | 5        |         |            |         | 
+
+## Post Code Consideration
+For this section, we will consider an example in order to reduce the need to work with a lot of the data.
+
+**WIP**
