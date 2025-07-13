@@ -53,6 +53,11 @@ We will mainly use **R** to answer the following questions:
 > [transforming_cleaning_agg_date_brand.R](transforming_cleaning_agg_date_brand.R)
 > [brand_analysis.R](brand_analysis.R)
 
+> Regarding cleaning, we could do more than we will.
+> We could reduce outliers by searching for gaps or ``wrong`` data, or we could get rid of stations near highways.
+> But since this is a small learning project, we will skip this and be more rough by filtering (price should inbetween 0.7 and 3).
+
+
 ## Best Day to Refuel
 To avoid getting a too general average, I decided to track the cheapest day of each week in 2024.
 As a result we get the following table in decreasing order.
@@ -97,50 +102,52 @@ We conclude, that, in general, 09:00pm is the best time to refuel, if you want t
 
 ## Best Combination of Weekday, Time of Day and Hour
 
-Searching for the best combination of **weekday**, **time of day** and **time**, we get the following:
+Searching for the best combination of **weekday** and **time**, we obtain the table below.
+In there, the average price is the mean over all ``weekday`` x ``time`` combinations, e.g. the average price for **Monday** at **9om**.
+
 
 ### e10:
-| Weekday   | ToD       | Hour    | Amount e10  | average price |
-|-----------|-----------|---------|-------------|---------------|
-| Thursday  | morning   | 11      | 52          | 1.706         |
-| Friday    | morning   | 11      | 52          | 1.707         |
-| Wednesday | morning   | 11      | 52          | 1.706         |
-| Monday    | morning   | 11      | 52          | 1.709         |
-| Saturday  | morning   | 11      | 52          | 1.705         |
-| Sunday    | morning   | 11      | 52          | 1.704         |
-| Tuesday   | morning   | 11      | 50          | 1.703         |
-| Monday    | evening   | 21      | 42          | 1.685         |
-| Saturday  | evening   | 21      | 42          | 1.681         |
-| Sunday    | night     | 0       | 42          | 1.725         |
+| weekday    | hour | amount_e10 | av_e10 |
+|:----------:|:----:|:----------:|:------:|
+|   Monday   |  21  |     42     | 1.687  |
+|  Saturday  |  21  |     42     | 1.689  |
+|   Friday   |  21  |     41     | 1.686  |
+|  Tuesday   |  21  |     40     | 1.685  |
+|  Thursday  |  21  |     40     | 1.685  |
+|   Sunday   |  21  |     34     | 1.692  |
+| Wednesday  |  21  |     30     | 1.685  |
+| Wednesday  |  19  |     16     | 1.694  |
+|   Sunday   |  19  |     12     | 1.701  |
+|  Tuesday   |  19  |     10     | 1.694  |
 
 
 ### e5:
-| Weekday   | ToD      | Hour    | Amount e5  | average price  |
-|-----------|----------|---------|------------|----------------|
-| Tuesday   | morning  | 11      | 52         | 1.763          |
-| Thursday  | morning  | 11      | 52         | 1.762          |
-| Friday    | morning  | 11      | 52         | 1.763          |
-| Wednesday | morning  | 11      | 52         | 1.762          |
-| Monday    | morning  | 11      | 52         | 1.766          |
-| Saturday  | morning  | 11      | 52         | 1.762          |
-| Sunday    | morning  | 11      | 52         | 1.761          |
-| Samstag   | evening  | 21      | 44         | 1.737          |
-| Monday    | evening  | 21      | 42         | 1.737          |
-| Friday    | evening  | 21      | 41         | 1.742          |
+| weekday    | hour | amount_e5 | av_e5 |
+|:----------:|:----:|:---------:|:-----:|
+|  Saturday  |  21  |    44     | 1.746 |
+|   Monday   |  21  |    42     | 1.744 |
+|   Friday   |  21  |    41     | 1.743 |
+|  Tuesday   |  21  |    36     | 1.742 |
+|  Thursday  |  21  |    36     | 1.742 |
+|   Sunday   |  21  |    35     | 1.749 |
+| Wednesday  |  21  |    29     | 1.742 |
+| Wednesday  |  19  |    17     | 1.751 |
+|  Tuesday   |  19  |    13     | 1.751 |
+|  Thursday  |  19  |    13     | 1.751 |
 
 ### diesel:
-| Weekday   | ToD       | Hour    | Amount diesel   | average price   |
-|-----------|-----------|---------|-----------------|-----------------|
-| Thursday  | morning   | 11      | 52              | 1.614           |
-| Friday    | morning   | 11      | 52              | 1.616           |
-| Wednesday | morning   | 11      | 52              | 1.614           |
-| Monday    | morning   | 11      | 52              | 1.619           |
-| Saturday  | morning   | 11      | 52              | 1.613           |
-| Sunday    | morning   | 11      | 52              | 1.612           |
-| Tuesday   | morning   | 11      | 50              | 1.614           |
-| Tuesday   | evening   | 21      | 44              | 1.597           |
-| Monday    | evening   | 21      | 44              | 1.597           |
-| Friday    | evening   | 21      | 40              | 1.599           |
+| weekday    | hour | amount_diesel | av_diesel |
+|:----------:|:----:|:-------------:|:---------:|
+|  Tuesday   |  21  |      44       |   1.588   |
+|   Monday   |  21  |      44       |   1.592   |
+|   Friday   |  21  |      40       |   1.590   |
+|   Sunday   |  21  |      40       |   1.595   |
+|  Thursday  |  21  |      39       |   1.588   |
+|  Saturday  |  21  |      37       |   1.592   |
+| Wednesday  |  21  |      36       |   1.588   |
+| Wednesday  |  19  |      14       |   1.600   |
+|  Saturday  |  19  |      13       |   1.603   |
+|   Friday   |  19  |      11       |   1.602   |
 
 
 ## Conclusion
@@ -158,27 +165,12 @@ This marly means that **Monday** is a good day, the **evening** is a solid time 
 
 ### For the combined investigation we see the following:
 
-The price of fuel drops in the morning around 11am.
-This is in high contrast to our finding for the best **time of day** as well as for the best **time**.
+The price of fuel drops in the evening around 9pm.
+This reflects the findings so far.
 
-Let us comment on this.
-Take the example of 52 hit for the minimum at **Thursday morning at 11am**.
-In **52** out of **366** days, this is the lowest point for the fuel price.
-So in about **14%** of all hours of the year **Thursday morning at 11am** is a good bet on average.
-
-Considering that on average, out of 366 days, 366 evening are cheaper than the other **times of the day**, I would rather refuel in the evening that in a Thursday morning at 11am.
-
-Similar is true for the **weekdays**.
-Because 11 out of 52 mean that in 21% of all cases Monday is the best day to refuel e10.
-That is way beyond 14%.
-
-And for the **time**, we see that about 270 out of 366 days are resulting in 9pm.
-That means that 74% of the time it is best to refuel at 9pm.
-
-
-In conclusion, base on the daily fuel price changes of 2024, I would recommend to refuel at 9pm or in the general versinkt -- the evening.
-If it about the day too, I would say go for Monday or Tuesday (e10, e5) or Thursday (diesel).
-Might be a good idea to combine this.
+We notice that the **weekday** is not as important as the **time**.
+All fuel prices drop around 7pm and 9pm on all days.
+Therefore, rather focusing on a day, focus on the time.
 
 
 
