@@ -20,6 +20,7 @@ Click to show
     - [Best combination](#best-combination)
 - [Where to Refuel?](#where-to-refuel)
   - [Brand Analysis](#brand-analysis)
+- [Post Code Consideration](#post-code-consideration)
 
 </details>
 
@@ -167,6 +168,9 @@ CSV file.
 # general handling analytics
 library(tidyverse)
 
+# for .md tables
+library(pander)
+
 # open station file
 df <- read.csv("Datasets/agg_dataset.csv")
 ```
@@ -195,17 +199,36 @@ df %>%
     ## 7 Sonntag      1.63  1.78  1.72
 
 ``` r
-print(head(df,7))
+pander(head(df,10), style = 'rmarkdown')
 ```
 
-    ##        date_app       brand   diesel       e5      e10 gr_size weekday hour   tod
-    ## 1 2024-01-01 00             1.683295 1.775682 1.717955      44  Montag    0 night
-    ## 2 2024-01-01 00   A Energie 1.656500 1.774000 1.714000       4  Montag    0 night
-    ## 3 2024-01-01 00     ALLGUTH 1.673444 1.737889 1.684556       9  Montag    0 night
-    ## 4 2024-01-01 00         AMB 1.709000 1.819000 1.759000       1  Montag    0 night
-    ## 5 2024-01-01 00        ARAL 1.794852 1.872968 1.812968    1051  Montag    0 night
-    ## 6 2024-01-01 00        AVIA 1.685993 1.775667 1.715993     153  Montag    0 night
-    ## 7 2024-01-01 00 AVIA Xpress 1.715818 1.800364 1.740364      11  Montag    0 night
+|   date_app    |     brand     | diesel |  e5   |  e10  | gr_size |
+|:-------------:|:-------------:|:------:|:-----:|:-----:|:-------:|
+| 2024-01-01 00 |               | 1.683  | 1.776 | 1.718 |   44    |
+| 2024-01-01 00 |   A Energie   | 1.657  | 1.774 | 1.714 |    4    |
+| 2024-01-01 00 |    ALLGUTH    | 1.673  | 1.738 | 1.685 |    9    |
+| 2024-01-01 00 |      AMB      | 1.709  | 1.819 | 1.759 |    1    |
+| 2024-01-01 00 |     ARAL      | 1.795  | 1.873 | 1.813 |  1051   |
+| 2024-01-01 00 |     AVIA      | 1.686  | 1.776 | 1.716 |   153   |
+| 2024-01-01 00 |  AVIA Xpress  | 1.716  |  1.8  | 1.74  |   11    |
+| 2024-01-01 00 |    Access     | 1.664  | 1.739 | 1.679 |    2    |
+| 2024-01-01 00 |     Agip      | 1.813  | 1.901 | 1.843 |   16    |
+| 2024-01-01 00 | Ahlert Junior | 1.706  | 1.792 | 1.732 |    3    |
+
+Table continues below
+
+| weekday | hour |  tod  |
+|:-------:|:----:|:-----:|
+| Montag  |  0   | night |
+| Montag  |  0   | night |
+| Montag  |  0   | night |
+| Montag  |  0   | night |
+| Montag  |  0   | night |
+| Montag  |  0   | night |
+| Montag  |  0   | night |
+| Montag  |  0   | night |
+| Montag  |  0   | night |
+| Montag  |  0   | night |
 
 We notice that there is not a huge differance in pricing. This might be
 due to larger differences in prices per month.
@@ -243,22 +266,36 @@ df %>%
     ## 12 12      1.58  1.70  1.65
 
 ``` r
-print(head(df,12))
+pander(head(df,10), style = 'rmarkdown')
 ```
 
-    ##         date_app                    brand   diesel       e5      e10 gr_sizeweekday hour   tod month
-    ## 1  2024-01-01 00                          1.683295 1.775682 1.717955      44 Montag    0 night    01
-    ## 2  2024-01-01 00                A Energie 1.656500 1.774000 1.714000       4 Montag    0 night    01
-    ## 3  2024-01-01 00                  ALLGUTH 1.673444 1.737889 1.684556       9 Montag    0 night    01
-    ## 4  2024-01-01 00                      AMB 1.709000 1.819000 1.759000       1 Montag    0 night    01
-    ## 5  2024-01-01 00                     ARAL 1.794852 1.872968 1.812968    1051 Montag    0 night    01
-    ## 6  2024-01-01 00                     AVIA 1.685993 1.775667 1.715993     153 Montag    0 night    01
-    ## 7  2024-01-01 00              AVIA Xpress 1.715818 1.800364 1.740364      11 Montag    0 night    01
-    ## 8  2024-01-01 00                   Access 1.664000 1.739000 1.679000       2 Montag    0 night    01
-    ## 9  2024-01-01 00                     Agip 1.812750 1.901500 1.842750      16 Montag    0 night    01
-    ## 10 2024-01-01 00            Ahlert Junior 1.705667 1.792333 1.732333       3 Montag    0 night    01
-    ## 11 2024-01-01 00         Argos Tankstelle 1.654000 1.729000 1.669000       4 Montag    0 night    01
-    ## 12 2024-01-01 00 Autofit Freie Tankstelle 1.739000 1.804000 1.744000       2 Montag    0 night    01
+|   date_app    |     brand     | diesel |  e5   |  e10  | gr_size |
+|:-------------:|:-------------:|:------:|:-----:|:-----:|:-------:|
+| 2024-01-01 00 |               | 1.683  | 1.776 | 1.718 |   44    |
+| 2024-01-01 00 |   A Energie   | 1.657  | 1.774 | 1.714 |    4    |
+| 2024-01-01 00 |    ALLGUTH    | 1.673  | 1.738 | 1.685 |    9    |
+| 2024-01-01 00 |      AMB      | 1.709  | 1.819 | 1.759 |    1    |
+| 2024-01-01 00 |     ARAL      | 1.795  | 1.873 | 1.813 |  1051   |
+| 2024-01-01 00 |     AVIA      | 1.686  | 1.776 | 1.716 |   153   |
+| 2024-01-01 00 |  AVIA Xpress  | 1.716  |  1.8  | 1.74  |   11    |
+| 2024-01-01 00 |    Access     | 1.664  | 1.739 | 1.679 |    2    |
+| 2024-01-01 00 |     Agip      | 1.813  | 1.901 | 1.843 |   16    |
+| 2024-01-01 00 | Ahlert Junior | 1.706  | 1.792 | 1.732 |    3    |
+
+Table continues below
+
+| weekday | hour |  tod  | month |
+|:-------:|:----:|:-----:|:-----:|
+| Montag  |  0   | night |  01   |
+| Montag  |  0   | night |  01   |
+| Montag  |  0   | night |  01   |
+| Montag  |  0   | night |  01   |
+| Montag  |  0   | night |  01   |
+| Montag  |  0   | night |  01   |
+| Montag  |  0   | night |  01   |
+| Montag  |  0   | night |  01   |
+| Montag  |  0   | night |  01   |
+| Montag  |  0   | night |  01   |
 
 So averaging over, e.g., every **monday**, results in an outcome that’s
 to flat.
@@ -317,19 +354,18 @@ df_weekdays <- left_join(df_weekdays,temp, by = "weekday")
 Print the results:
 
 ``` r
-print(df_weekdays)
+pander(df_weekdays, style = 'rmarkdown')
 ```
 
-    ## # A tibble: 7 × 4
-    ##   weekday    amount_e10 amount_e5 amount_diesel
-    ##   <chr>           <int>     <int>         <int>
-    ## 1 Montag             11        11             6
-    ## 2 Dienstag           10        10             8
-    ## 3 Donnerstag          8         8            11
-    ## 4 Mittwoch            8         8             9
-    ## 5 Sonntag             6         6             5
-    ## 6 Samstag             5         5             5
-    ## 7 Freitag             4         4             8
+|  weekday   | amount_e10 | amount_e5 | amount_diesel |
+|:----------:|:----------:|:---------:|:-------------:|
+|   Montag   |     11     |    11     |       6       |
+|  Dienstag  |     10     |    10     |       8       |
+| Donnerstag |     8      |     8     |      11       |
+|  Mittwoch  |     8      |     8     |       9       |
+|  Sonntag   |     6      |     6     |       5       |
+|  Samstag   |     5      |     5     |       5       |
+|  Freitag   |     4      |     4     |       8       |
 
 Using this procedure we continue to figure out the best time to refuel.
 \### Best Time of Day to Refuel
@@ -376,13 +412,12 @@ df_tod <- left_join(df_tod, temp, by="tod")
 Printing the output
 
 ``` r
-print(df_tod)
+pander(df_tod, style = 'rmarkdown')
 ```
 
-    ## # A tibble: 1 × 4
-    ##   tod     amount_e10 amount_e5 amount_diesel
-    ##   <chr>        <int>     <int>         <int>
-    ## 1 evening        366       366           366
+|   tod   | amount_e10 | amount_e5 | amount_diesel |
+|:-------:|:----------:|:---------:|:-------------:|
+| evening |    366     |    366    |      366      |
 
 We notice that the best time of day is **evening**. Refueling in the
 evening is cheaper for 366 out of 366 days in 2024.
@@ -426,115 +461,140 @@ df_h <- left_join(df_h, temp, by="hour")
 Having a look at the table
 
 ``` r
-print(df_h)
+pander(df_h, style = 'rmarkdown')
 ```
 
-    ## # A tibble: 4 × 4
-    ##    hour amount_e10 amount_e5 amount_diesel
-    ##   <int>      <int>     <int>         <int>
-    ## 1    21        269       263           282
-    ## 2    19         73        81            71
-    ## 3    18         22        21            11
-    ## 4    11          2         1             1
+| hour | amount_e10 | amount_e5 | amount_diesel |
+|:----:|:----------:|:---------:|:-------------:|
+|  21  |    269     |    263    |      282      |
+|  19  |     73     |    81     |      71       |
+|  18  |     22     |    21     |      11       |
+|  11  |     2      |     1     |       1       |
 
 we notice that best time to refuel is a 09:00pm.
 
 ### Best combination
 
 We do the same as before but we group for all components, namely for
-`nweek, weekday, tod` and `hour`. In order to calculate a average price.
-Then match it with the minimum per group, that is given by
-`weekday, tod` and `hour`. Counting the amount of occupying minima we
-obtain the following:
+`nweek, weekday` and `hour`. In order to calculate an average price.
+Then match it with the minimum per group, that is given by `weekday` and
+`hour`. Counting the amount of occupying minima we obtain the following:
 
 ``` r
 df_comb_e10 <- df %>%
-    group_by(nweek, weekday, tod, hour) %>%
+    group_by(nweek, weekday, hour) %>%
     summarise(e10=mean(e10)) %>%
     filter(e10 == min(e10)) %>%
-    group_by(weekday, tod, hour) %>%
-    summarise(amount_e10 = n(), av_e10 = mean(e10)) %>%
+    group_by(weekday, hour) %>%
+    summarise(amount_e10 = n()) %>%
     arrange(desc(amount_e10))
 ```
 
 ``` r
-print(head(df_comb_e10,10))
+pander(head(df_comb_e10,10), style = 'rmarkdown')
 ```
 
-    ## # A tibble: 10 × 5
-    ## # Groups:   weekday, tod [10]
-    ##    weekday    tod      hour amount_e10 av_e10
-    ##    <chr>      <chr>   <int>      <int>  <dbl>
-    ##  1 Donnerstag morning    11         52   1.71
-    ##  2 Freitag    morning    11         52   1.71
-    ##  3 Mittwoch   morning    11         52   1.71
-    ##  4 Montag     morning    11         52   1.71
-    ##  5 Samstag    morning    11         52   1.71
-    ##  6 Sonntag    morning    11         52   1.70
-    ##  7 Dienstag   morning    11         50   1.70
-    ##  8 Montag     evening    21         42   1.69
-    ##  9 Samstag    evening    21         42   1.68
-    ## 10 Sonntag    night       0         42   1.73
+|  weekday   | hour | amount_e10 |
+|:----------:|:----:|:----------:|
+|   Montag   |  21  |     42     |
+|  Samstag   |  21  |     42     |
+|  Freitag   |  21  |     41     |
+|  Dienstag  |  21  |     40     |
+| Donnerstag |  21  |     40     |
+|  Sonntag   |  21  |     34     |
+|  Mittwoch  |  21  |     30     |
+|  Mittwoch  |  19  |     16     |
+|  Sonntag   |  19  |     12     |
+|  Dienstag  |  19  |     10     |
 
 Doing the same for **e5** and \*\*diesel:
 
 ``` r
 df_comb_e5 <- df %>%
-    group_by(nweek, weekday, tod, hour) %>%
+    group_by(nweek, weekday, hour) %>%
     summarise(e5=mean(e5)) %>%
     filter(e5 == min(e5)) %>%
-    group_by(weekday, tod, hour) %>%
-    summarise(amount_e5 = n(), av_e5 = mean(e5)) %>%
+    group_by(weekday, hour) %>%
+    summarise(amount_e5 = n()) %>%
     arrange(desc(amount_e5))
 ```
 
 ``` r
-print(head(df_comb_e5,10))
+pander(head(df_comb_e5,10), style = 'rmarkdown')
 ```
 
-    ## # A tibble: 10 × 5
-    ## # Groups:   weekday, tod [10]
-    ##    weekday    tod      hour amount_e5 av_e5
-    ##    <chr>      <chr>   <int>     <int> <dbl>
-    ##  1 Dienstag   morning    11        52  1.76
-    ##  2 Donnerstag morning    11        52  1.76
-    ##  3 Freitag    morning    11        52  1.76
-    ##  4 Mittwoch   morning    11        52  1.76
-    ##  5 Montag     morning    11        52  1.77
-    ##  6 Samstag    morning    11        52  1.76
-    ##  7 Sonntag    morning    11        52  1.76
-    ##  8 Samstag    evening    21        44  1.74
-    ##  9 Montag     evening    21        42  1.74
-    ## 10 Freitag    evening    21        41  1.74
+|  weekday   | hour | amount_e5 |
+|:----------:|:----:|:---------:|
+|  Samstag   |  21  |    44     |
+|   Montag   |  21  |    42     |
+|  Freitag   |  21  |    41     |
+|  Dienstag  |  21  |    36     |
+| Donnerstag |  21  |    36     |
+|  Sonntag   |  21  |    35     |
+|  Mittwoch  |  21  |    29     |
+|  Mittwoch  |  19  |    17     |
+|  Dienstag  |  19  |    13     |
+| Donnerstag |  19  |    13     |
 
 ``` r
 df_comb_diesel <- df %>%
-    group_by(nweek, weekday, tod, hour) %>%
+    group_by(nweek, weekday, hour) %>%
     summarise(diesel=mean(diesel)) %>%
     filter(diesel == min(diesel)) %>%
-    group_by(weekday, tod, hour) %>%
-    summarise(amount_diesel = n(), av_diesel = mean(diesel)) %>%
+    group_by(weekday, hour) %>%
+    summarise(amount_diesel = n()) %>%
     arrange(desc(amount_diesel))
 ```
 
 ``` r
-print(head(df_comb_diesel,10))
+pander(head(df_comb_diesel,10), style = 'rmarkdown')
 ```
 
-    ## # A tibble: 10 × 5
-    ## # Groups:   weekday, tod [10]
-    ##    weekday    tod      hour amount_diesel av_diesel
-    ##    <chr>      <chr>   <int>         <int>     <dbl>
-    ##  1 Donnerstag morning    11            52      1.61
-    ##  2 Freitag    morning    11            52      1.62
-    ##  3 Mittwoch   morning    11            52      1.61
-    ##  4 Montag     morning    11            52      1.62
-    ##  5 Samstag    morning    11            52      1.61
-    ##  6 Sonntag    morning    11            52      1.61
-    ##  7 Dienstag   morning    11            50      1.61
-    ##  8 Dienstag   evening    21            44      1.60
-    ##  9 Montag     evening    21            44      1.60
-    ## 10 Freitag    evening    21            40      1.60
+|  weekday   | hour | amount_diesel |
+|:----------:|:----:|:-------------:|
+|  Dienstag  |  21  |      44       |
+|   Montag   |  21  |      44       |
+|  Freitag   |  21  |      40       |
+|  Sonntag   |  21  |      40       |
+| Donnerstag |  21  |      39       |
+|  Samstag   |  21  |      37       |
+|  Mittwoch  |  21  |      36       |
+|  Mittwoch  |  19  |      14       |
+|  Samstag   |  19  |      13       |
+|  Freitag   |  19  |      11       |
+
+Lastly we create a tabel, that contains the average prices for all
+weekdays at 7pm and 9pm.
+
+``` r
+df %>%
+      group_by(weekday, hour) %>%
+      summarise(av_e10 = mean(e10),
+                av_e5 = mean(e5),
+                av_diesel = mean(diesel)) %>%
+      filter(hour == 21 | hour == 19) %>%
+      pander(style = 'rmarkdown')
+```
+
+    ## `summarise()` has grouped output by 'weekday'. You can override using the
+    ## `.groups` argument.
+
+|  weekday   | hour | av_e10 | av_e5 | av_diesel |
+|:----------:|:----:|:------:|:-----:|:---------:|
+|  Dienstag  |  19  | 1.694  | 1.751 |   1.601   |
+|  Dienstag  |  21  | 1.685  | 1.742 |   1.588   |
+| Donnerstag |  19  | 1.694  | 1.751 |    1.6    |
+| Donnerstag |  21  | 1.685  | 1.742 |   1.588   |
+|  Freitag   |  19  | 1.695  | 1.752 |   1.602   |
+|  Freitag   |  21  | 1.686  | 1.743 |   1.59    |
+|  Mittwoch  |  19  | 1.694  | 1.751 |    1.6    |
+|  Mittwoch  |  21  | 1.685  | 1.742 |   1.588   |
+|   Montag   |  19  | 1.696  | 1.753 |   1.604   |
+|   Montag   |  21  | 1.687  | 1.744 |   1.592   |
+|  Samstag   |  19  | 1.697  | 1.754 |   1.603   |
+|  Samstag   |  21  | 1.689  | 1.746 |   1.592   |
+|  Sonntag   |  19  | 1.701  | 1.758 |   1.608   |
+|  Sonntag   |  21  | 1.692  | 1.749 |   1.595   |
 
 # Where to Refuel?
 
@@ -557,18 +617,21 @@ temp <- df %>%
 Having a look at the output:
 
 ``` r
-print(head(temp,6))
+pander(head(temp,10), style = 'rmarkdown')
 ```
 
-    ## # A tibble: 6 × 3
-    ##   brand                     e10  size
-    ##   <chr>                   <dbl> <int>
-    ## 1 Union Zapfstelle         1.60    98
-    ## 2 Tankstelle Scharlibbe    1.65    74
-    ## 3 GILLET tanken & waschen  1.58    42
-    ## 4 V-Markt Mainburg         1.65    15
-    ## 5 Winkler 24h              1.58    13
-    ## 6 DONIG ARAL-Vertrieb      1.65    10
+|          brand          |  e10  | size |
+|:-----------------------:|:-----:|:----:|
+|    Union Zapfstelle     | 1.604 |  98  |
+|  Tankstelle Scharlibbe  | 1.65  |  74  |
+| GILLET tanken & waschen | 1.58  |  42  |
+|    V-Markt Mainburg     | 1.654 |  15  |
+|       Winkler 24h       | 1.579 |  13  |
+|   DONIG ARAL-Vertrieb   | 1.646 |  10  |
+|  Hoffmann Tankstellen   | 1.674 |  6   |
+|      Schnorberger       | 1.674 |  6   |
+|  Tankstelle Logabirum   | 1.667 |  6   |
+|    V-Markt Lauingen     | 1.639 |  5   |
 
 In order to take the amount of stations by brand in consideration we
 consider `stations.csv`.
@@ -610,17 +673,16 @@ temp <- df %>%
 Leads to the following:
 
 ``` r
-print(head(temp,6))
+pander(head(temp,10), style = 'rmarkdown')
 ```
 
-    ## # A tibble: 5 × 3
-    ##   brand   e10  size
-    ##   <chr> <dbl> <int>
-    ## 1 JET    1.70   211
-    ## 2 STAR   1.72    76
-    ## 3 HEM    1.71    58
-    ## 4 AVIA   1.78    20
-    ## 5 ESSO   1.66     1
+| brand |  e10  | size |
+|:-----:|:-----:|:----:|
+|  JET  | 1.702 | 211  |
+| STAR  | 1.716 |  76  |
+|  HEM  | 1.713 |  58  |
+| AVIA  | 1.778 |  20  |
+| ESSO  | 1.656 |  1   |
 
 We see that **JET** is on **211** days the cheapest brand on average for
 e10, out of 366 possible days of 2024.
@@ -650,27 +712,134 @@ temp_diesel <- df %>%
 Leads to the following:
 
 ``` r
-print(head(temp_e5,6))
+pander(head(temp_e5,10), style = 'rmarkdown')
 ```
 
-    ## # A tibble: 6 × 3
-    ##   brand         e5  size
-    ##   <chr>      <dbl> <int>
-    ## 1 JET         1.76   202
-    ## 2 STAR        1.77    86
-    ## 3 HEM         1.77    52
-    ## 4 AVIA        1.84    19
-    ## 5 Raiffeisen  1.80     5
-    ## 6 ESSO        1.70     2
+|   brand    |  e5   | size |
+|:----------:|:-----:|:----:|
+|    JET     | 1.764 | 202  |
+|    STAR    | 1.772 |  86  |
+|    HEM     | 1.766 |  52  |
+|    AVIA    | 1.84  |  19  |
+| Raiffeisen | 1.802 |  5   |
+|    ESSO    | 1.701 |  2   |
 
 ``` r
-print(head(temp_diesel,6))
+pander(temp_diesel, style = 'rmarkdown')
 ```
 
-    ## # A tibble: 4 × 3
-    ##   brand      diesel  size
-    ##   <chr>       <dbl> <int>
-    ## 1 Raiffeisen   1.64   162
-    ## 2 JET          1.61   112
-    ## 3 STAR         1.61    91
-    ## 4 HEM          1.54     1
+|   brand    | diesel | size |
+|:----------:|:------:|:----:|
+| Raiffeisen | 1.636  | 162  |
+|    JET     |  1.61  | 112  |
+|    STAR    | 1.611  |  91  |
+|    HEM     | 1.543  |  1   |
+
+# Post Code Consideration
+
+For this section, we will consider an example in order to reduce the
+need to work with a lot of the data.
+
+For this we follow the example of
+`transforming_cleaning_agg_date_brand.R`, but instead of aggregating
+over all ids, we want to be able to differentiate the stations. Since we
+would obtain a large and long file if we consider all the possible post
+codes, we only focus on one specific post code: **33100**.
+
+``` r
+# joining/merging dataframes
+library(dplyr)
+# general handling analytics
+library(tidyverse)
+
+
+# open station file
+df_station <- read.csv("Datasets/stations.csv")
+
+# initiate an empty dataframe to build upon
+df <-  data.frame()
+
+# set post_code
+postcode <-  33100
+
+# filter df_station for post_code
+df_station <- df_station %>%
+            filter(post_code == postcode)
+
+
+# getting a list of all files per month
+# iterating over month
+for (i in 1:12){
+  # turn the int 3 into the str "03"
+  if (i<10){
+    folder <- paste0("0", toString(i))
+  } else{
+    folder <- toString(i)
+  }
+  path <- paste0("Datasets/2024/", folder)
+  list_of_files <- list.files(path =path,
+                            pattern = "\\.csv$",
+                            full.names = TRUE)
+
+  # iterating over each file (day) for the current month
+  for (file_path in list_of_files){
+    # open file (daily information)
+    df_file <- read.csv(file_path) %>%
+            inner_join(df_station, by =c("station_uuid"="uuid")) %>%
+            select(date, station_uuid, post_code, city, brand, diesel,e5,e10) %>%
+            filter(diesel>0.7,
+                    diesel<3,
+                    e5>0.7,
+                    e5<3,
+                    e10>0.7,
+                    e10<3)   # We do that to avoid foulty outleyers
+
+    # looking at the ``brand`` we notice some whitspace, let's remove it
+    df_file$brand <- str_squish(df_file$brand)
+
+    # set date_app YYYY-MM-DD HH
+    df_file$date_app <- str_split_i(df_file$date, ":",1)
+    temp <- df_file %>%
+            group_by(date_app, station_uuid, post_code, city, brand) %>%
+            summarise(diesel = mean(diesel),
+                      e5 = mean(e5),
+                      e10 = mean(e10),
+                      gr_size = n())
+
+    # add the day of the week as column
+    temp$weekday <- weekdays(as.Date(str_split_i(temp$date_app, " ",1)))
+
+    # add hour column
+    temp$hour <- str_split_i(temp$date_app, " ",2)
+
+    # add time of day colums that provides the information of time of day by
+    # # night, morning, midday, evening in even 6h chuncks
+    # # tod - time of day
+    temp$tod <-  NA
+    temp$tod[temp$hour %in% c("00", "01", "02", "03", "04", "05")] <- "night"
+    temp$tod[temp$hour %in% c("06", "07", "08", "09", "10", "11")] <- "morning"
+    temp$tod[temp$hour %in% c("12", "13", "14", "15", "16", "17")] <- "midday"
+    temp$tod[temp$hour %in% c("18", "19", "20", "21", "22", "23")] <- "evening"
+
+    # combine df with temp -- add rows from temp
+    df <- rbind(df, temp)
+
+    # remove ``temp`` and ``df_file`` from memory
+    rm(temp,df_file)
+  }
+}
+
+# adding month as column
+df$month <- str_split_i(df$date_app, "-",2)
+
+# adding calendar week as column
+df$nweek <- strftime(str_split_i(df$date_app, " ",1), format = "%V")
+
+# adding day as column
+df$day <- str_split_i(df$date_app, " ",1)
+
+#save file
+write.csv(df,file='Datasets/agg_dataset_location.csv', row.names=FALSE)
+```
+
+**To be continued**
