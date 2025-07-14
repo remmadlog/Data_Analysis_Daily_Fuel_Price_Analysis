@@ -37,7 +37,7 @@ for (i in 1:12){
     # open file (daily information)
     df_file <- read.csv(file_path) %>%
             inner_join(df_station, by =c("station_uuid"="uuid")) %>%
-            select(date, station_uuid, post_code, city, brand, diesel,e5,e10) %>%
+            select(date, station_uuid, post_code, city, name, brand, diesel,e5,e10) %>%
             filter(diesel>0.7,
                     diesel<3,
                     e5>0.7,
@@ -51,7 +51,7 @@ for (i in 1:12){
     # set date_app YYYY-MM-DD HH
     df_file$date_app <- str_split_i(df_file$date, ":",1)
     temp <- df_file %>%
-            group_by(date_app, station_uuid, post_code, city, brand) %>%
+            group_by(date_app, station_uuid, post_code, city, name, brand) %>%
             summarise(diesel = mean(diesel),
                       e5 = mean(e5),
                       e10 = mean(e10),

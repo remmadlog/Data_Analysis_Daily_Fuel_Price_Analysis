@@ -10,6 +10,7 @@ Daily German Fuel Price Analysis (2024)
 Click to show
 </summary>
 
+- [TOC](#toc)
 - [Dataset](#dataset)
 - [When Should You Refuel?](#when-should-you-refuel)
   - [Preparation and Transformation](#preparation-and-transformation)
@@ -21,6 +22,13 @@ Click to show
 - [Where to Refuel?](#where-to-refuel)
   - [Brand Analysis](#brand-analysis)
 - [Post Code Consideration](#post-code-consideration)
+  - [Transforming and Loading the
+    Data](#transforming-and-loading-the-data)
+  - [Where and When to Refuel?](#where-and-when-to-refuel)
+    - [Overview for e10](#overview-for-e10)
+      - [Station per Day](#station-per-day)
+      - [Station per Time of Day](#station-per-time-of-day)
+      - [Station per Time of Day](#station-per-time-of-day-1)
 
 </details>
 
@@ -170,6 +178,7 @@ library(tidyverse)
 
 # for .md tables
 library(pander)
+panderOptions('table.split.table', 'inf')
 
 # open station file
 df <- read.csv("Datasets/agg_dataset.csv")
@@ -202,33 +211,18 @@ df %>%
 pander(head(df,10), style = 'rmarkdown')
 ```
 
-|   date_app    |     brand     | diesel |  e5   |  e10  | gr_size |
-|:-------------:|:-------------:|:------:|:-----:|:-----:|:-------:|
-| 2024-01-01 00 |               | 1.683  | 1.776 | 1.718 |   44    |
-| 2024-01-01 00 |   A Energie   | 1.657  | 1.774 | 1.714 |    4    |
-| 2024-01-01 00 |    ALLGUTH    | 1.673  | 1.738 | 1.685 |    9    |
-| 2024-01-01 00 |      AMB      | 1.709  | 1.819 | 1.759 |    1    |
-| 2024-01-01 00 |     ARAL      | 1.795  | 1.873 | 1.813 |  1051   |
-| 2024-01-01 00 |     AVIA      | 1.686  | 1.776 | 1.716 |   153   |
-| 2024-01-01 00 |  AVIA Xpress  | 1.716  |  1.8  | 1.74  |   11    |
-| 2024-01-01 00 |    Access     | 1.664  | 1.739 | 1.679 |    2    |
-| 2024-01-01 00 |     Agip      | 1.813  | 1.901 | 1.843 |   16    |
-| 2024-01-01 00 | Ahlert Junior | 1.706  | 1.792 | 1.732 |    3    |
-
-Table continues below
-
-| weekday | hour |  tod  |
-|:-------:|:----:|:-----:|
-| Montag  |  0   | night |
-| Montag  |  0   | night |
-| Montag  |  0   | night |
-| Montag  |  0   | night |
-| Montag  |  0   | night |
-| Montag  |  0   | night |
-| Montag  |  0   | night |
-| Montag  |  0   | night |
-| Montag  |  0   | night |
-| Montag  |  0   | night |
+|   date_app    |     brand     | diesel |  e5   |  e10  | gr_size | weekday | hour |  tod  |
+|:-------------:|:-------------:|:------:|:-----:|:-----:|:-------:|:-------:|:----:|:-----:|
+| 2024-01-01 00 |               | 1.683  | 1.776 | 1.718 |   44    | Montag  |  0   | night |
+| 2024-01-01 00 |   A Energie   | 1.657  | 1.774 | 1.714 |    4    | Montag  |  0   | night |
+| 2024-01-01 00 |    ALLGUTH    | 1.673  | 1.738 | 1.685 |    9    | Montag  |  0   | night |
+| 2024-01-01 00 |      AMB      | 1.709  | 1.819 | 1.759 |    1    | Montag  |  0   | night |
+| 2024-01-01 00 |     ARAL      | 1.795  | 1.873 | 1.813 |  1051   | Montag  |  0   | night |
+| 2024-01-01 00 |     AVIA      | 1.686  | 1.776 | 1.716 |   153   | Montag  |  0   | night |
+| 2024-01-01 00 |  AVIA Xpress  | 1.716  |  1.8  | 1.74  |   11    | Montag  |  0   | night |
+| 2024-01-01 00 |    Access     | 1.664  | 1.739 | 1.679 |    2    | Montag  |  0   | night |
+| 2024-01-01 00 |     Agip      | 1.813  | 1.901 | 1.843 |   16    | Montag  |  0   | night |
+| 2024-01-01 00 | Ahlert Junior | 1.706  | 1.792 | 1.732 |    3    | Montag  |  0   | night |
 
 We notice that there is not a huge differance in pricing. This might be
 due to larger differences in prices per month.
@@ -269,33 +263,18 @@ df %>%
 pander(head(df,10), style = 'rmarkdown')
 ```
 
-|   date_app    |     brand     | diesel |  e5   |  e10  | gr_size |
-|:-------------:|:-------------:|:------:|:-----:|:-----:|:-------:|
-| 2024-01-01 00 |               | 1.683  | 1.776 | 1.718 |   44    |
-| 2024-01-01 00 |   A Energie   | 1.657  | 1.774 | 1.714 |    4    |
-| 2024-01-01 00 |    ALLGUTH    | 1.673  | 1.738 | 1.685 |    9    |
-| 2024-01-01 00 |      AMB      | 1.709  | 1.819 | 1.759 |    1    |
-| 2024-01-01 00 |     ARAL      | 1.795  | 1.873 | 1.813 |  1051   |
-| 2024-01-01 00 |     AVIA      | 1.686  | 1.776 | 1.716 |   153   |
-| 2024-01-01 00 |  AVIA Xpress  | 1.716  |  1.8  | 1.74  |   11    |
-| 2024-01-01 00 |    Access     | 1.664  | 1.739 | 1.679 |    2    |
-| 2024-01-01 00 |     Agip      | 1.813  | 1.901 | 1.843 |   16    |
-| 2024-01-01 00 | Ahlert Junior | 1.706  | 1.792 | 1.732 |    3    |
-
-Table continues below
-
-| weekday | hour |  tod  | month |
-|:-------:|:----:|:-----:|:-----:|
-| Montag  |  0   | night |  01   |
-| Montag  |  0   | night |  01   |
-| Montag  |  0   | night |  01   |
-| Montag  |  0   | night |  01   |
-| Montag  |  0   | night |  01   |
-| Montag  |  0   | night |  01   |
-| Montag  |  0   | night |  01   |
-| Montag  |  0   | night |  01   |
-| Montag  |  0   | night |  01   |
-| Montag  |  0   | night |  01   |
+|   date_app    |     brand     | diesel |  e5   |  e10  | gr_size | weekday | hour |  tod  | month |
+|:-------------:|:-------------:|:------:|:-----:|:-----:|:-------:|:-------:|:----:|:-----:|:-----:|
+| 2024-01-01 00 |               | 1.683  | 1.776 | 1.718 |   44    | Montag  |  0   | night |  01   |
+| 2024-01-01 00 |   A Energie   | 1.657  | 1.774 | 1.714 |    4    | Montag  |  0   | night |  01   |
+| 2024-01-01 00 |    ALLGUTH    | 1.673  | 1.738 | 1.685 |    9    | Montag  |  0   | night |  01   |
+| 2024-01-01 00 |      AMB      | 1.709  | 1.819 | 1.759 |    1    | Montag  |  0   | night |  01   |
+| 2024-01-01 00 |     ARAL      | 1.795  | 1.873 | 1.813 |  1051   | Montag  |  0   | night |  01   |
+| 2024-01-01 00 |     AVIA      | 1.686  | 1.776 | 1.716 |   153   | Montag  |  0   | night |  01   |
+| 2024-01-01 00 |  AVIA Xpress  | 1.716  |  1.8  | 1.74  |   11    | Montag  |  0   | night |  01   |
+| 2024-01-01 00 |    Access     | 1.664  | 1.739 | 1.679 |    2    | Montag  |  0   | night |  01   |
+| 2024-01-01 00 |     Agip      | 1.813  | 1.901 | 1.843 |   16    | Montag  |  0   | night |  01   |
+| 2024-01-01 00 | Ahlert Junior | 1.706  | 1.792 | 1.732 |    3    | Montag  |  0   | night |  01   |
 
 So averaging over, e.g., every **monday**, results in an outcome that’s
 to flat.
@@ -740,6 +719,8 @@ pander(temp_diesel, style = 'rmarkdown')
 For this section, we will consider an example in order to reduce the
 need to work with a lot of the data.
 
+## Transforming and Loading the Data
+
 For this we follow the example of
 `transforming_cleaning_agg_date_brand.R`, but instead of aggregating
 over all ids, we want to be able to differentiate the stations. Since we
@@ -786,7 +767,7 @@ for (i in 1:12){
     # open file (daily information)
     df_file <- read.csv(file_path) %>%
             inner_join(df_station, by =c("station_uuid"="uuid")) %>%
-            select(date, station_uuid, post_code, city, brand, diesel,e5,e10) %>%
+            select(date, station_uuid, post_code, city, name, brand, diesel,e5,e10) %>%
             filter(diesel>0.7,
                     diesel<3,
                     e5>0.7,
@@ -800,7 +781,7 @@ for (i in 1:12){
     # set date_app YYYY-MM-DD HH
     df_file$date_app <- str_split_i(df_file$date, ":",1)
     temp <- df_file %>%
-            group_by(date_app, station_uuid, post_code, city, brand) %>%
+            group_by(date_app, station_uuid, post_code, city, name, brand) %>%
             summarise(diesel = mean(diesel),
                       e5 = mean(e5),
                       e10 = mean(e10),
@@ -842,4 +823,279 @@ df$day <- str_split_i(df$date_app, " ",1)
 write.csv(df,file='Datasets/agg_dataset_location.csv', row.names=FALSE)
 ```
 
-**To be continued**
+## Where and When to Refuel?
+
+We start by loading the prepared file.
+
+``` r
+df_loc <- read.csv('Datasets/agg_dataset_location.csv')
+```
+
+We are interested in the best **weekday** and **location** to refuel.
+Therefore, we will count minima occurrence per week, since the average
+does not provide a valuable result. More precisely, we search the
+cheapest station per day and count their appearance.
+
+``` r
+df_loc_day_diesel <- df_loc %>%
+        group_by(nweek, weekday, station_uuid) %>%
+        summarise(diesel=mean(diesel)) %>%
+        filter(diesel == min(diesel)) %>%
+        group_by(weekday, station_uuid) %>%
+        summarise(size=n()) %>%
+        inner_join(data.frame(df_station$uuid,df_station$name), by = c("station_uuid"="df_station.uuid")) %>% # for getting the station name
+        arrange(weekday, desc(size))
+
+df_loc_day_e5 <- df_loc %>%
+        group_by(nweek, weekday, station_uuid) %>%
+        summarise(e5=mean(e5)) %>%
+        filter(e5 == min(e5)) %>%
+        group_by(weekday, station_uuid) %>%
+        summarise(size=n()) %>%
+        inner_join(data.frame(df_station$uuid,df_station$name), by = c("station_uuid"="df_station.uuid")) %>% # for getting the station name
+        arrange(weekday, desc(size))
+
+df_loc_day_e10 <- df_loc %>%
+        group_by(nweek, weekday, station_uuid) %>%
+        summarise(e10=mean(e10)) %>%
+        filter(e10 == min(e10)) %>%
+        group_by(weekday, station_uuid) %>%
+        summarise(size=n()) %>%
+        inner_join(data.frame(df_station$uuid,df_station$name), by = c("station_uuid"="df_station.uuid")) %>% # for getting the station name
+        arrange(weekday, desc(size))
+
+# reorder columns:
+df_loc_day_diesel <-  df_loc_day_diesel[,c(1,2,4,3)]
+df_loc_day_e5 <-  df_loc_day_e5[,c(1,2,4,3)]
+df_loc_day_e10 <-  df_loc_day_e10[,c(1,2,4,3)]
+```
+
+Thus, we obtain the following tables showing us where to refuel on each
+day of the week.
+
+``` r
+pander(df_loc_day_diesel, style = 'rmarkdown', caption = 'diesel')
+```
+> diesel:
+
+| weekday | station_uuid | df_station.name | size |
+|:--:|:--:|:--:|:--:|
+| Dienstag | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 33 |
+| Dienstag | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b | Raiffeisen Westfalen Mitte eG | 15 |
+| Dienstag | 7e153319-1803-4975-8b72-9cacdbcd4e84 | Raiffeisen Westfalen Mitte eG | 4 |
+| Donnerstag | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 30 |
+| Donnerstag | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b | Raiffeisen Westfalen Mitte eG | 19 |
+| Donnerstag | 7e153319-1803-4975-8b72-9cacdbcd4e84 | Raiffeisen Westfalen Mitte eG | 2 |
+| Donnerstag | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 | 1 |
+| Freitag | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 37 |
+| Freitag | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b | Raiffeisen Westfalen Mitte eG | 14 |
+| Freitag | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 | 1 |
+| Mittwoch | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 43 |
+| Mittwoch | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b | Raiffeisen Westfalen Mitte eG | 7 |
+| Mittwoch | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 | 2 |
+| Montag | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 38 |
+| Montag | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b | Raiffeisen Westfalen Mitte eG | 11 |
+| Montag | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 | 2 |
+| Montag | 7e153319-1803-4975-8b72-9cacdbcd4e84 | Raiffeisen Westfalen Mitte eG | 1 |
+| Samstag | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 28 |
+| Samstag | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b | Raiffeisen Westfalen Mitte eG | 23 |
+| Samstag | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 | 1 |
+| Sonntag | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 35 |
+| Sonntag | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b | Raiffeisen Westfalen Mitte eG | 17 |
+| Sonntag | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 | 2 |
+
+
+
+``` r
+pander(df_loc_day_e5, style = 'rmarkdown', caption = 'e5')
+```
+> e5:
+
+| weekday | station_uuid | df_station.name | size |
+|:--:|:--:|:--:|:--:|
+| Dienstag | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 30 |
+| Dienstag | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b | Raiffeisen Westfalen Mitte eG | 15 |
+| Dienstag | 7e153319-1803-4975-8b72-9cacdbcd4e84 | Raiffeisen Westfalen Mitte eG | 5 |
+| Dienstag | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 | 2 |
+| Donnerstag | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 26 |
+| Donnerstag | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b | Raiffeisen Westfalen Mitte eG | 19 |
+| Donnerstag | 7e153319-1803-4975-8b72-9cacdbcd4e84 | Raiffeisen Westfalen Mitte eG | 4 |
+| Donnerstag | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 | 3 |
+| Freitag | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b | Raiffeisen Westfalen Mitte eG | 32 |
+| Freitag | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 17 |
+| Freitag | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 | 2 |
+| Freitag | 7e153319-1803-4975-8b72-9cacdbcd4e84 | Raiffeisen Westfalen Mitte eG | 1 |
+| Mittwoch | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b | Raiffeisen Westfalen Mitte eG | 28 |
+| Mittwoch | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 22 |
+| Mittwoch | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 | 1 |
+| Mittwoch | 7e153319-1803-4975-8b72-9cacdbcd4e84 | Raiffeisen Westfalen Mitte eG | 1 |
+| Montag | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b | Raiffeisen Westfalen Mitte eG | 30 |
+| Montag | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 20 |
+| Montag | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 | 1 |
+| Montag | 7e153319-1803-4975-8b72-9cacdbcd4e84 | Raiffeisen Westfalen Mitte eG | 1 |
+| Samstag | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b | Raiffeisen Westfalen Mitte eG | 25 |
+| Samstag | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 25 |
+| Samstag | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 | 2 |
+| Sonntag | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 29 |
+| Sonntag | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b | Raiffeisen Westfalen Mitte eG | 19 |
+| Sonntag | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 | 4 |
+
+
+``` r
+pander(df_loc_day_e10, style = 'rmarkdown', caption = 'e10')
+```
+> e10:
+
+| weekday | station_uuid | df_station.name | size |
+|:--:|:--:|:--:|:--:|
+| Dienstag | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 31 |
+| Dienstag | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b | Raiffeisen Westfalen Mitte eG | 15 |
+| Dienstag | 7e153319-1803-4975-8b72-9cacdbcd4e84 | Raiffeisen Westfalen Mitte eG | 4 |
+| Dienstag | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 | 2 |
+| Donnerstag | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 28 |
+| Donnerstag | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b | Raiffeisen Westfalen Mitte eG | 17 |
+| Donnerstag | 7e153319-1803-4975-8b72-9cacdbcd4e84 | Raiffeisen Westfalen Mitte eG | 4 |
+| Donnerstag | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 | 3 |
+| Freitag | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b | Raiffeisen Westfalen Mitte eG | 33 |
+| Freitag | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 16 |
+| Freitag | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 | 2 |
+| Freitag | 7e153319-1803-4975-8b72-9cacdbcd4e84 | Raiffeisen Westfalen Mitte eG | 1 |
+| Mittwoch | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b | Raiffeisen Westfalen Mitte eG | 27 |
+| Mittwoch | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 22 |
+| Mittwoch | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 | 2 |
+| Mittwoch | 7e153319-1803-4975-8b72-9cacdbcd4e84 | Raiffeisen Westfalen Mitte eG | 1 |
+| Montag | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b | Raiffeisen Westfalen Mitte eG | 29 |
+| Montag | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 20 |
+| Montag | 7e153319-1803-4975-8b72-9cacdbcd4e84 | Raiffeisen Westfalen Mitte eG | 2 |
+| Montag | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 | 1 |
+| Samstag | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 26 |
+| Samstag | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b | Raiffeisen Westfalen Mitte eG | 25 |
+| Samstag | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 | 2 |
+| Sonntag | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 31 |
+| Sonntag | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b | Raiffeisen Westfalen Mitte eG | 17 |
+| Sonntag | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 | 4 |
+
+
+More precise, for each day of the week (`weekday`) we see how often
+which station was the cheapest throughout the year 2024. For example,
+for **e10** on **Tuesdays** we see that **Tankstelle SB-Zentralmarkt**
+was on 33 out of 52 days the cheapest station that day. So it would be
+not a bad idea to refuel there on Tuesdays.
+
+Following the same ideas as before one can now continue to obtain the
+best station to refuel in the **evening** or at **11am** or even to
+refuel on **Mondays** at **3am**.
+
+For this we will only focus on **e10**
+
+### Overview for e10
+
+#### Station per Day
+
+``` r
+e10_day <- df_loc_day_e10 %>%
+        filter(size==max(size))
+```
+
+``` r
+pander(e10_day, style = 'rmarkdown', caption = 'Best station for each day of the week -- e10 -- out of 52 day')
+```
+
+> Best station for each day of the week – e10 – out of 52 day:
+
+| weekday | station_uuid | df_station.name | size |
+|:--:|:--:|:--:|:--:|
+| Dienstag | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 31 |
+| Donnerstag | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 28 |
+| Freitag | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b | Raiffeisen Westfalen Mitte eG | 33 |
+| Mittwoch | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b | Raiffeisen Westfalen Mitte eG | 27 |
+| Montag | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b | Raiffeisen Westfalen Mitte eG | 29 |
+| Samstag | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 26 |
+| Sonntag | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 31 |
+
+
+#### Station per Time of Day
+
+``` r
+df_loc_tod_e10 <- df_loc %>%
+        group_by(nweek, weekday, tod, station_uuid) %>%
+        summarise(e10=mean(e10)) %>%
+        filter(e10 == min(e10)) %>%
+        group_by(tod, station_uuid) %>%
+        summarise(size=n()) %>%
+        inner_join(data.frame(df_station$uuid,df_station$name), by = c("station_uuid"="df_station.uuid")) %>% # for getting the station name
+        arrange(tod, desc(size))
+
+# reorder columns:
+df_loc_tod_e10 <-  df_loc_tod_e10[,c(1,2,4,3)]
+
+e10_tod <- df_loc_tod_e10 %>%
+        filter(size==max(size))
+```
+
+``` r
+pander(e10_tod, style = 'rmarkdown', caption = 'Best station for each time of the day -- e10 -- out of 366 day')
+```
+> Best station for each time of the day – e10 – out of 366 day:
+
+| tod | station_uuid | df_station.name | size |
+|:--:|:--:|:--:|:--:|
+| evening | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 | 143 |
+| midday | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 199 |
+| morning | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 219 |
+| night | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 | 237 |
+
+
+#### Station per Time of Day
+
+``` r
+df_loc_hour_e10 <- df_loc %>%
+        group_by(nweek, weekday, hour, station_uuid) %>%
+        summarise(e10=mean(e10)) %>%
+        filter(e10 == min(e10)) %>%
+        group_by(hour, station_uuid) %>%
+        summarise(size=n()) %>%
+        inner_join(data.frame(df_station$uuid,df_station$name), by = c("station_uuid"="df_station.uuid")) %>% # for getting the station name
+        arrange(hour, desc(size))
+
+# reorder columns:
+df_loc_hour_e10 <-  df_loc_hour_e10[,c(1,2,4,3)]
+
+e10_hour <- df_loc_hour_e10 %>%
+        filter(size==max(size))
+```
+
+``` r
+pander(e10_hour, style = 'rmarkdown', caption = 'Best station for each hour of the day -- e10 -- out of 366 day')
+```
+
+> Best station for each hour of the day – e10 – out of 366 day:
+
+| hour | station_uuid | df_station.name | size |
+|:--:|:--:|:--:|:--:|
+| 0 | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b | Raiffeisen Westfalen Mitte eG | 159 |
+| 1 | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b | Raiffeisen Westfalen Mitte eG | 49 |
+| 2 | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b | Raiffeisen Westfalen Mitte eG | 5 |
+| 3 | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b | Raiffeisen Westfalen Mitte eG | 3 |
+| 3 | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 3 |
+| 4 | 0b173b12-5ff4-4fe3-93f5-c2c1b07fbb84 | Michael Dirker | 196 |
+| 5 | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 | 340 |
+| 6 | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b | Raiffeisen Westfalen Mitte eG | 156 |
+| 7 | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 248 |
+| 8 | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 278 |
+| 9 | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b | Raiffeisen Westfalen Mitte eG | 209 |
+| 10 | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 327 |
+| 11 | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 259 |
+| 12 | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 175 |
+| 13 | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 290 |
+| 14 | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 203 |
+| 15 | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 207 |
+| 16 | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 252 |
+| 17 | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 262 |
+| 18 | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 199 |
+| 19 | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 185 |
+| 20 | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 157 |
+| 21 | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | Tankstelle SB-Zentralmarkt | 131 |
+| 22 | 0b173b12-5ff4-4fe3-93f5-c2c1b07fbb84 | Michael Dirker | 229 |
+| 23 | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b | Raiffeisen Westfalen Mitte eG | 66 |
+

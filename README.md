@@ -29,12 +29,23 @@ We will mainly use **R** to answer the following questions:
   - In a more general sense: ``morning, midday, evening, night``.
   - In a detailed sense: ``00:00, 01:00, ..., 23:00``.
 - Wich brand should you use to save money?
+- Location base example:
+  - What stations in ``postcode`` are good to use, e.g.,
+    - on **Monday**
+    - in the **morning**
+    - at **4am**.
 
+> [!IMPORTANT]
+> We marly present results in this file, for more explanations and details see [Daily_Fuel_Analysis.md](Daily_Fuel_Analysis.md).
+
+> [!NOTE]
 > For questions related to an even more general overview, like month behaviour, we refer to [this](https://github.com/remmadlog/Data_Analysis_Fuel_Prices/tree/master) project.
 
+> [!NOTE]
 > The dataset used can be found [here](https://dev.azure.com/tankerkoenig/_git/tankerkoenig-data?path=/README.md&_a=preview).
 
-> Folderstructure:
+> [!NOTE]
+> Folder structure:
 > - Dataset
 >   - 2024
 >     - 01
@@ -48,11 +59,8 @@ We will mainly use **R** to answer the following questions:
 >   - ``agg_dataset.csv``
 >   - ``stations.scv``
 
-> For an overview of the code see the ``.rmd`` [Daily_Fuel_Analysis.md](Daily_Fuel_Analysis.md) or the ``.R`` files 
-> [time_analysis.R](time_analysis.R)
-> [transforming_cleaning_agg_date_brand.R](transforming_cleaning_agg_date_brand.R)
-> [brand_analysis.R](brand_analysis.R)
 
+> [!NOTE]
 > Regarding cleaning, we could do more than we will.
 > We could reduce outliers by searching for gaps or ``wrong`` data, or we could get rid of stations near highways.
 > But since this is a small learning project, we will skip this and be more rough by filtering (price should inbetween 0.7 and 3).
@@ -95,6 +103,8 @@ Again tracking the amount, this time of the best time (full hour) per day we get
 | 09:00 pm | 269        | 263       | 286           |
 
 We conclude, that, in general, 09:00pm is the best time to refuel, if you want to save the most.
+
+> [!IMPORTANT]
 > We should take in consideration, that the price of fuel does not change each hour. So this result might be a bit misleading, 
 > since we only have information about the time a price changed.
 > But therefore we considered the general time of day and concluded that **evening** is a good time to refuel.
@@ -190,7 +200,199 @@ Thus, resulting in the following table:
 |     | AVIA  | 20     |    | AVIA       | 19       |         | HEM        | 1       |
 |     | ESSO  | 1      |    | Raiffeisen | 5        |         |            |         | 
 
-## Post Code Consideration
+
+
+## Postcode Consideration
 For this section, we will consider an example in order to reduce the need to work with a lot of the data.
 
-**WIP**
+
+### Creating the File
+Starting with filtering and transforming in [transforming_cleaning_agg_location.R](transforming_cleaning_agg_location.R), 
+we obtain a dataset, [agg_dataset_location.csv](Datasets/agg_dataset_location.csv), for the postcode **33100**.
+
+
+### Analysis
+Using this ``.csv`` we first consider for each day of each week the cheapest station.
+Counting their appearance results in the following tables:
+
+<details>
+<summary>Diesel Table</summary>
+
+|  weekday   |             station_uuid             |                         df_station.name                          | size |
+|:----------:|:------------------------------------:|:----------------------------------------------------------------:|:----:|
+|  Dienstag  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |                    Tankstelle SB-Zentralmarkt                    |  33  |
+|  Dienstag  | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b |                  Raiffeisen Westfalen Mitte eG                   |  15  |
+|  Dienstag  | 7e153319-1803-4975-8b72-9cacdbcd4e84 |                  Raiffeisen Westfalen Mitte eG                   |  4   |
+| Donnerstag | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |                    Tankstelle SB-Zentralmarkt                    |  30  |
+| Donnerstag | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b |                  Raiffeisen Westfalen Mitte eG                   |  19  |
+| Donnerstag | 7e153319-1803-4975-8b72-9cacdbcd4e84 |                  Raiffeisen Westfalen Mitte eG                   |  2   |
+| Donnerstag | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 |  1   |
+|  Freitag   | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |                    Tankstelle SB-Zentralmarkt                    |  37  |
+|  Freitag   | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b |                  Raiffeisen Westfalen Mitte eG                   |  14  |
+|  Freitag   | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 |  1   |
+|  Mittwoch  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |                    Tankstelle SB-Zentralmarkt                    |  43  |
+|  Mittwoch  | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b |                  Raiffeisen Westfalen Mitte eG                   |  7   |
+|  Mittwoch  | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 |  2   |
+|   Montag   | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |                    Tankstelle SB-Zentralmarkt                    |  38  |
+|   Montag   | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b |                  Raiffeisen Westfalen Mitte eG                   |  11  |
+|   Montag   | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 |  2   |
+|   Montag   | 7e153319-1803-4975-8b72-9cacdbcd4e84 |                  Raiffeisen Westfalen Mitte eG                   |  1   |
+|  Samstag   | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |                    Tankstelle SB-Zentralmarkt                    |  28  |
+|  Samstag   | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b |                  Raiffeisen Westfalen Mitte eG                   |  23  |
+|  Samstag   | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 |  1   |
+|  Sonntag   | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |                    Tankstelle SB-Zentralmarkt                    |  35  |
+|  Sonntag   | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b |                  Raiffeisen Westfalen Mitte eG                   |  17  |
+|  Sonntag   | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 |  2   |
+
+</details>
+
+
+<details>
+<summary>E5 Table</summary>
+
+|  weekday   |             station_uuid             |                         df_station.name                          | size |
+|:----------:|:------------------------------------:|:----------------------------------------------------------------:|:----:|
+|  Dienstag  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |                    Tankstelle SB-Zentralmarkt                    |  30  |
+|  Dienstag  | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b |                  Raiffeisen Westfalen Mitte eG                   |  15  |
+|  Dienstag  | 7e153319-1803-4975-8b72-9cacdbcd4e84 |                  Raiffeisen Westfalen Mitte eG                   |  5   |
+|  Dienstag  | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 |  2   |
+| Donnerstag | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |                    Tankstelle SB-Zentralmarkt                    |  26  |
+| Donnerstag | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b |                  Raiffeisen Westfalen Mitte eG                   |  19  |
+| Donnerstag | 7e153319-1803-4975-8b72-9cacdbcd4e84 |                  Raiffeisen Westfalen Mitte eG                   |  4   |
+| Donnerstag | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 |  3   |
+|  Freitag   | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b |                  Raiffeisen Westfalen Mitte eG                   |  32  |
+|  Freitag   | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |                    Tankstelle SB-Zentralmarkt                    |  17  |
+|  Freitag   | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 |  2   |
+|  Freitag   | 7e153319-1803-4975-8b72-9cacdbcd4e84 |                  Raiffeisen Westfalen Mitte eG                   |  1   |
+|  Mittwoch  | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b |                  Raiffeisen Westfalen Mitte eG                   |  28  |
+|  Mittwoch  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |                    Tankstelle SB-Zentralmarkt                    |  22  |
+|  Mittwoch  | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 |  1   |
+|  Mittwoch  | 7e153319-1803-4975-8b72-9cacdbcd4e84 |                  Raiffeisen Westfalen Mitte eG                   |  1   |
+|   Montag   | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b |                  Raiffeisen Westfalen Mitte eG                   |  30  |
+|   Montag   | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |                    Tankstelle SB-Zentralmarkt                    |  20  |
+|   Montag   | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 |  1   |
+|   Montag   | 7e153319-1803-4975-8b72-9cacdbcd4e84 |                  Raiffeisen Westfalen Mitte eG                   |  1   |
+|  Samstag   | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b |                  Raiffeisen Westfalen Mitte eG                   |  25  |
+|  Samstag   | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |                    Tankstelle SB-Zentralmarkt                    |  25  |
+|  Samstag   | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 |  2   |
+|  Sonntag   | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |                    Tankstelle SB-Zentralmarkt                    |  29  |
+|  Sonntag   | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b |                  Raiffeisen Westfalen Mitte eG                   |  19  |
+|  Sonntag   | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 |  4   |
+
+</details>
+
+
+<details>
+<summary>E10 Table</summary>
+
+|  weekday   |             station_uuid             |                         df_station.name                          | size |
+|:----------:|:------------------------------------:|:----------------------------------------------------------------:|:----:|
+|  Dienstag  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |                    Tankstelle SB-Zentralmarkt                    |  31  |
+|  Dienstag  | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b |                  Raiffeisen Westfalen Mitte eG                   |  15  |
+|  Dienstag  | 7e153319-1803-4975-8b72-9cacdbcd4e84 |                  Raiffeisen Westfalen Mitte eG                   |  4   |
+|  Dienstag  | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 |  2   |
+| Donnerstag | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |                    Tankstelle SB-Zentralmarkt                    |  28  |
+| Donnerstag | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b |                  Raiffeisen Westfalen Mitte eG                   |  17  |
+| Donnerstag | 7e153319-1803-4975-8b72-9cacdbcd4e84 |                  Raiffeisen Westfalen Mitte eG                   |  4   |
+| Donnerstag | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 |  3   |
+|  Freitag   | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b |                  Raiffeisen Westfalen Mitte eG                   |  33  |
+|  Freitag   | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |                    Tankstelle SB-Zentralmarkt                    |  16  |
+|  Freitag   | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 |  2   |
+|  Freitag   | 7e153319-1803-4975-8b72-9cacdbcd4e84 |                  Raiffeisen Westfalen Mitte eG                   |  1   |
+|  Mittwoch  | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b |                  Raiffeisen Westfalen Mitte eG                   |  27  |
+|  Mittwoch  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |                    Tankstelle SB-Zentralmarkt                    |  22  |
+|  Mittwoch  | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 |  2   |
+|  Mittwoch  | 7e153319-1803-4975-8b72-9cacdbcd4e84 |                  Raiffeisen Westfalen Mitte eG                   |  1   |
+|   Montag   | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b |                  Raiffeisen Westfalen Mitte eG                   |  29  |
+|   Montag   | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |                    Tankstelle SB-Zentralmarkt                    |  20  |
+|   Montag   | 7e153319-1803-4975-8b72-9cacdbcd4e84 |                  Raiffeisen Westfalen Mitte eG                   |  2   |
+|   Montag   | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 |  1   |
+|  Samstag   | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |                    Tankstelle SB-Zentralmarkt                    |  26  |
+|  Samstag   | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b |                  Raiffeisen Westfalen Mitte eG                   |  25  |
+|  Samstag   | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 |  2   |
+|  Sonntag   | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |                    Tankstelle SB-Zentralmarkt                    |  31  |
+|  Sonntag   | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b |                  Raiffeisen Westfalen Mitte eG                   |  17  |
+|  Sonntag   | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 |  4   |
+
+</details>
+
+There we see for each day of the week, wich station and how often the station was the cheapest.
+
+
+
+Following this example but reducing the output, we continue with a focus on **e10** and only the highest appearance, 
+and investigate which station is the best at each day of the week, time of day and hour.
+
+Resulting in the following table for the **day of the week**:
+
+|  weekday   |             station_uuid             |        df_station.name        | size |
+|:----------:|:------------------------------------:|:-----------------------------:|:----:|
+|  Dienstag  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |  Tankstelle SB-Zentralmarkt   |  31  |
+| Donnerstag | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |  Tankstelle SB-Zentralmarkt   |  28  |
+|  Freitag   | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b | Raiffeisen Westfalen Mitte eG |  33  |
+|  Mittwoch  | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b | Raiffeisen Westfalen Mitte eG |  27  |
+|   Montag   | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b | Raiffeisen Westfalen Mitte eG |  29  |
+|  Samstag   | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |  Tankstelle SB-Zentralmarkt   |  26  |
+|  Sonntag   | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |  Tankstelle SB-Zentralmarkt   |  31  |
+
+> Out of 52
+
+For the **time of day** we end up with this list:
+
+|   tod   |             station_uuid             |                         df_station.name                          | size |
+|:-------:|:------------------------------------:|:----------------------------------------------------------------:|:----:|
+| evening | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 | 143  |
+| midday  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |                    Tankstelle SB-Zentralmarkt                    | 199  |
+| morning | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |                    Tankstelle SB-Zentralmarkt                    | 219  |
+|  night  | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 | 237  |
+
+> Out of 366
+
+
+And lastly for each **hour** of the day, we get a longer table:
+
+| hour |             station_uuid             | size |                         df_station.name                          |
+|:----:|:------------------------------------:|:----:|:----------------------------------------------------------------:|
+|  0   | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b | 159  |                  Raiffeisen Westfalen Mitte eG                   |
+|  1   | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b |  49  |                  Raiffeisen Westfalen Mitte eG                   |
+|  2   | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b |  5   |                  Raiffeisen Westfalen Mitte eG                   |
+|  3   | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b |  3   |                  Raiffeisen Westfalen Mitte eG                   |
+|  3   | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |  3   |                    Tankstelle SB-Zentralmarkt                    |
+|  4   | 0b173b12-5ff4-4fe3-93f5-c2c1b07fbb84 | 196  |                          Michael Dirker                          |
+|  5   | 51d4b673-a095-1aa0-e100-80009459e03a | 340  | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 |
+|  6   | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b | 156  |                  Raiffeisen Westfalen Mitte eG                   |
+|  7   | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | 248  |                    Tankstelle SB-Zentralmarkt                    |
+|  8   | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | 278  |                    Tankstelle SB-Zentralmarkt                    |
+|  9   | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b | 209  |                  Raiffeisen Westfalen Mitte eG                   |
+|  10  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | 327  |                    Tankstelle SB-Zentralmarkt                    |
+|  11  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | 259  |                    Tankstelle SB-Zentralmarkt                    |
+|  12  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | 175  |                    Tankstelle SB-Zentralmarkt                    |
+|  13  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | 290  |                    Tankstelle SB-Zentralmarkt                    |
+|  14  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | 203  |                    Tankstelle SB-Zentralmarkt                    |
+|  15  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | 207  |                    Tankstelle SB-Zentralmarkt                    |
+|  16  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | 252  |                    Tankstelle SB-Zentralmarkt                    |
+|  17  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | 262  |                    Tankstelle SB-Zentralmarkt                    |
+|  18  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | 199  |                    Tankstelle SB-Zentralmarkt                    |
+|  19  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | 185  |                    Tankstelle SB-Zentralmarkt                    |
+|  20  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | 157  |                    Tankstelle SB-Zentralmarkt                    |
+|  21  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | 131  |                    Tankstelle SB-Zentralmarkt                    |
+|  22  | 0b173b12-5ff4-4fe3-93f5-c2c1b07fbb84 | 229  |                          Michael Dirker                          |
+|  23  | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b |  66  |                  Raiffeisen Westfalen Mitte eG                   |
+
+> Out of 366
+
+
+
+### Remarks
+For a different postcode one can change ``postcode`` in line **14** of [transforming_cleaning_agg_location.R](transforming_cleaning_agg_location.R).
+Modifying a bit more would make it possible to consider multiple postcodes, e.g., make a postcode list and filter for ``post_code %in% postcode_list``.
+
+Changing ``postcode`` to ``city`` one could consider a whole city instead of a postcode area.
+
+> [!IMPORTANT]
+> In this case one has to clean the ``city`` column.
+> An example for this can be found [here](https://github.com/remmadlog/Data_Analysis_Fuel_Prices/blob/master/Analysis_Fuel_Price.md) under **Location Comparison**.
+
+For more information, we can change ``e10_hour <- df_loc_hour_e10 %>% filter(size==max(size))`` to ``e10_hour <- df_loc_hour_e10``.
+
+If one wants results for a different fuel, they just needed to change ``e10`` to their preferred fuel.

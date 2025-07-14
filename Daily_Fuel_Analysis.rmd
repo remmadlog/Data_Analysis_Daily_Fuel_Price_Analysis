@@ -7,6 +7,7 @@ output: rmarkdown::github_document
 <details>
   <summary>Click to show</summary>
 
+- [TOC](#toc)
 - [Dataset](#dataset)
 - [When Should You Refuel?](#when-should-you-refuel)
   * [Preparation and Transformation](#preparation-and-transformation)
@@ -18,6 +19,12 @@ output: rmarkdown::github_document
 - [Where to Refuel?](#where-to-refuel)
   * [Brand Analysis](#brand-analysis)
 - [Post Code Consideration](#post-code-consideration)
+  * [Transforming and Loading the Data](#transforming-and-loading-the-data)
+  * [Where and When to Refuel?](#where-and-when-to-refuel)
+    + [Overview for e10](#overview-for-e10)
+      - [Station per Day](#station-per-day)
+      - [Station per Time of Day](#station-per-time-of-day)
+      - [Station per Time of Day](#station-per-time-of-day-1)
 
 
 </details>
@@ -170,6 +177,7 @@ library(tidyverse)
 
 # for .md tables
 library(pander)
+panderOptions('table.split.table', 'inf')
 
 # open station file
 df <- read.csv("Datasets/agg_dataset.csv")
@@ -519,6 +527,7 @@ pander(temp_diesel, style = 'rmarkdown')
 # Post Code Consideration
 For this section, we will consider an example in order to reduce the need to work with a lot of the data.
 
+## Transforming and Loading the Data
 For this we follow the example of ``transforming_cleaning_agg_date_brand.R``, but instead of aggregating over all ids, we want to be able to differentiate the stations.
 Since we would obtain a large and long file if we consider all the possible post codes, we only focus on one specific post code: **33100**.
 
@@ -562,7 +571,7 @@ for (i in 1:12){
     # open file (daily information)
     df_file <- read.csv(file_path) %>%
             inner_join(df_station, by =c("station_uuid"="uuid")) %>%
-            select(date, station_uuid, post_code, city, brand, diesel,e5,e10) %>%
+            select(date, station_uuid, post_code, city, name, brand, diesel,e5,e10) %>%
             filter(diesel>0.7,
                     diesel<3,
                     e5>0.7,
@@ -576,7 +585,7 @@ for (i in 1:12){
     # set date_app YYYY-MM-DD HH
     df_file$date_app <- str_split_i(df_file$date, ":",1)
     temp <- df_file %>%
-            group_by(date_app, station_uuid, post_code, city, brand) %>%
+            group_by(date_app, station_uuid, post_code, city, name, brand) %>%
             summarise(diesel = mean(diesel),
                       e5 = mean(e5),
                       e10 = mean(e10),
@@ -618,4 +627,123 @@ df$day <- str_split_i(df$date_app, " ",1)
 write.csv(df,file='Datasets/agg_dataset_location.csv', row.names=FALSE)
 ```
 
-**To be continued**
+## Where and When to Refuel?
+
+We start by loading the prepared file.
+```{r warning=FALSE,message=FALSE}
+df_loc <- read.csv('Datasets/agg_dataset_location.csv')
+```
+
+
+We are interested in the best **weekday** and **location** to refuel.
+Therefore, we will count minima occurrence per week, since the average does not provide a valuable result.
+More precisely, we search the cheapest station per day and count their appearance.
+
+```{r warning=FALSE,message=FALSE}
+df_loc_day_diesel <- df_loc %>%
+        group_by(nweek, weekday, station_uuid) %>%
+        summarise(diesel=mean(diesel)) %>%
+        filter(diesel == min(diesel)) %>%
+        group_by(weekday, station_uuid) %>%
+        summarise(size=n()) %>%
+        inner_join(data.frame(df_station$uuid,df_station$name), by = c("station_uuid"="df_station.uuid")) %>% # for getting the station name
+        arrange(weekday, desc(size))
+
+df_loc_day_e5 <- df_loc %>%
+        group_by(nweek, weekday, station_uuid) %>%
+        summarise(e5=mean(e5)) %>%
+        filter(e5 == min(e5)) %>%
+        group_by(weekday, station_uuid) %>%
+        summarise(size=n()) %>%
+        inner_join(data.frame(df_station$uuid,df_station$name), by = c("station_uuid"="df_station.uuid")) %>% # for getting the station name
+        arrange(weekday, desc(size))
+
+df_loc_day_e10 <- df_loc %>%
+        group_by(nweek, weekday, station_uuid) %>%
+        summarise(e10=mean(e10)) %>%
+        filter(e10 == min(e10)) %>%
+        group_by(weekday, station_uuid) %>%
+        summarise(size=n()) %>%
+        inner_join(data.frame(df_station$uuid,df_station$name), by = c("station_uuid"="df_station.uuid")) %>% # for getting the station name
+        arrange(weekday, desc(size))
+
+# reorder columns:
+df_loc_day_diesel <-  df_loc_day_diesel[,c(1,2,4,3)]
+df_loc_day_e5 <-  df_loc_day_e5[,c(1,2,4,3)]
+df_loc_day_e10 <-  df_loc_day_e10[,c(1,2,4,3)]
+```
+
+
+Thus, we obtain the following tables showing us where to refuel on each day of the week.
+```{r}
+pander(df_loc_day_diesel, style = 'rmarkdown', caption = 'diesel')
+pander(df_loc_day_e5, style = 'rmarkdown', caption = 'e5')
+pander(df_loc_day_e10, style = 'rmarkdown', caption = 'e10')
+```
+
+More precise, for each day of the week (``weekday``) we see how often which station was the cheapest throughout the year 2024.
+For example, for **e10** on **Tuesdays** we see that **Tankstelle SB-Zentralmarkt** was on 33 out of 52 days the cheapest station that day.
+So it would be not a bad idea to refuel there on Tuesdays.
+
+Following the same ideas as before one can now continue to obtain the best station to refuel in the **evening** or at **11am** or even to refuel on **Mondays** at **3am**.
+
+For this we will only focus on **e10**
+
+### Overview for e10
+
+#### Station per Day
+```{r warning=FALSE,message=FALSE}
+e10_day <- df_loc_day_e10 %>%
+        filter(size==max(size))
+```
+
+```{r}
+pander(e10_day, style = 'rmarkdown', caption = 'Best station for each day of the week -- e10 -- out of 52 day')
+```
+
+
+#### Station per Time of Day
+```{r warning=FALSE,message=FALSE}
+df_loc_tod_e10 <- df_loc %>%
+        group_by(nweek, weekday, tod, station_uuid) %>%
+        summarise(e10=mean(e10)) %>%
+        filter(e10 == min(e10)) %>%
+        group_by(tod, station_uuid) %>%
+        summarise(size=n()) %>%
+        inner_join(data.frame(df_station$uuid,df_station$name), by = c("station_uuid"="df_station.uuid")) %>% # for getting the station name
+        arrange(tod, desc(size))
+
+# reorder columns:
+df_loc_tod_e10 <-  df_loc_tod_e10[,c(1,2,4,3)]
+
+e10_tod <- df_loc_tod_e10 %>%
+        filter(size==max(size))
+```
+
+```{r}
+pander(e10_tod, style = 'rmarkdown', caption = 'Best station for each time of the day -- e10 -- out of 366 day')
+```
+
+#### Station per Time of Day
+```{r warning=FALSE,message=FALSE}
+df_loc_hour_e10 <- df_loc %>%
+        group_by(nweek, weekday, hour, station_uuid) %>%
+        summarise(e10=mean(e10)) %>%
+        filter(e10 == min(e10)) %>%
+        group_by(hour, station_uuid) %>%
+        summarise(size=n()) %>%
+        inner_join(data.frame(df_station$uuid,df_station$name), by = c("station_uuid"="df_station.uuid")) %>% # for getting the station name
+        arrange(hour, desc(size))
+
+# reorder columns:
+df_loc_hour_e10 <-  df_loc_hour_e10[,c(1,2,4,3)]
+
+e10_hour <- df_loc_hour_e10 %>%
+        filter(size==max(size))
+```
+
+```{r}
+pander(e10_hour, style = 'rmarkdown', caption = 'Best station for each hour of the day -- e10 -- out of 366 day')
+```
+
+
