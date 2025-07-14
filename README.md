@@ -351,33 +351,33 @@ For the **time of day** we end up with this list:
 
 And lastly for each **hour** of the day, we get a longer table:
 
-| hour |             station_uuid             | size |                         df_station.name                          |
-|:----:|:------------------------------------:|:----:|:----------------------------------------------------------------:|
-|  0   | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b | 159  |                  Raiffeisen Westfalen Mitte eG                   |
-|  1   | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b |  49  |                  Raiffeisen Westfalen Mitte eG                   |
-|  2   | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b |  5   |                  Raiffeisen Westfalen Mitte eG                   |
-|  3   | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b |  3   |                  Raiffeisen Westfalen Mitte eG                   |
-|  3   | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |  3   |                    Tankstelle SB-Zentralmarkt                    |
-|  4   | 0b173b12-5ff4-4fe3-93f5-c2c1b07fbb84 | 196  |                          Michael Dirker                          |
-|  5   | 51d4b673-a095-1aa0-e100-80009459e03a | 340  | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 |
-|  6   | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b | 156  |                  Raiffeisen Westfalen Mitte eG                   |
-|  7   | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | 248  |                    Tankstelle SB-Zentralmarkt                    |
-|  8   | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | 278  |                    Tankstelle SB-Zentralmarkt                    |
-|  9   | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b | 209  |                  Raiffeisen Westfalen Mitte eG                   |
-|  10  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | 327  |                    Tankstelle SB-Zentralmarkt                    |
-|  11  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | 259  |                    Tankstelle SB-Zentralmarkt                    |
-|  12  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | 175  |                    Tankstelle SB-Zentralmarkt                    |
-|  13  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | 290  |                    Tankstelle SB-Zentralmarkt                    |
-|  14  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | 203  |                    Tankstelle SB-Zentralmarkt                    |
-|  15  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | 207  |                    Tankstelle SB-Zentralmarkt                    |
-|  16  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | 252  |                    Tankstelle SB-Zentralmarkt                    |
-|  17  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | 262  |                    Tankstelle SB-Zentralmarkt                    |
-|  18  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | 199  |                    Tankstelle SB-Zentralmarkt                    |
-|  19  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | 185  |                    Tankstelle SB-Zentralmarkt                    |
-|  20  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | 157  |                    Tankstelle SB-Zentralmarkt                    |
-|  21  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a | 131  |                    Tankstelle SB-Zentralmarkt                    |
-|  22  | 0b173b12-5ff4-4fe3-93f5-c2c1b07fbb84 | 229  |                          Michael Dirker                          |
-|  23  | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b |  66  |                  Raiffeisen Westfalen Mitte eG                   |
+| hour |             station_uuid             |                       df_station.name                            | size   |
+|:----:|:------------------------------------:|:----------------------------------------------------------------:|:------:|
+|  0   | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b |                  Raiffeisen Westfalen Mitte eG                   |  159   |
+|  1   | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b |                  Raiffeisen Westfalen Mitte eG                   |   49   |
+|  2   | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b |                  Raiffeisen Westfalen Mitte eG                   |   5    |
+|  3   | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b |                  Raiffeisen Westfalen Mitte eG                   |   3    |
+|  3   | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |                    Tankstelle SB-Zentralmarkt                    |   3    |
+|  4   | 0b173b12-5ff4-4fe3-93f5-c2c1b07fbb84 |                          Michael Dirker                          |  196   |
+|  5   | 51d4b673-a095-1aa0-e100-80009459e03a | Supermarkt-Tankstelle am real,- Markt PADERBORN HUSENER STR. 121 |  340   |
+|  6   | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b |                  Raiffeisen Westfalen Mitte eG                   |  156   |
+|  7   | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |                    Tankstelle SB-Zentralmarkt                    |  248   |
+|  8   | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |                    Tankstelle SB-Zentralmarkt                    |  278   |
+|  9   | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b |                  Raiffeisen Westfalen Mitte eG                   |  209   |
+|  10  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |                    Tankstelle SB-Zentralmarkt                    |  327   |
+|  11  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |                    Tankstelle SB-Zentralmarkt                    |  259   |
+|  12  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |                    Tankstelle SB-Zentralmarkt                    |  175   |
+|  13  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |                    Tankstelle SB-Zentralmarkt                    |  290   |
+|  14  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |                    Tankstelle SB-Zentralmarkt                    |  203   |
+|  15  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |                    Tankstelle SB-Zentralmarkt                    |  207   |
+|  16  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |                    Tankstelle SB-Zentralmarkt                    |  252   |
+|  17  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |                    Tankstelle SB-Zentralmarkt                    |  262   |
+|  18  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |                    Tankstelle SB-Zentralmarkt                    |  199   |
+|  19  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |                    Tankstelle SB-Zentralmarkt                    |  185   |
+|  20  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |                    Tankstelle SB-Zentralmarkt                    |  157   |
+|  21  | 6197ee84-4a05-4b40-a8f4-e33c07aac90a |                    Tankstelle SB-Zentralmarkt                    |  131   |
+|  22  | 0b173b12-5ff4-4fe3-93f5-c2c1b07fbb84 |                          Michael Dirker                          |  229   |
+|  23  | 078712a4-aaf4-4bce-b2a8-3f6a25ef055b |                  Raiffeisen Westfalen Mitte eG                   |   66   |
 
 > Out of 366
 
